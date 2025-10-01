@@ -41,47 +41,47 @@
 - Paths shown below follow single CLI project structure
 
 ## Phase 3.1: Setup
-- [ ] T001 Create project structure with src/, tests/, and config directories
-- [ ] T002 Initialize Node.js project with TypeScript, Playwright, Pixelmatch, Commander.js, EJS dependencies in package.json
-- [ ] T003 [P] Configure ESLint and Prettier in .eslintrc.json and .prettierrc
-- [ ] T004 [P] Configure TypeScript compiler in tsconfig.json
-- [ ] T005 [P] Configure Jest for testing in jest.config.js
-- [ ] T006 [P] Create GitHub Actions workflow in .github/workflows/ci.yml
+- [x] T001 Create project structure with src/, tests/, and config directories
+- [x] T002 Initialize Node.js project with TypeScript, Playwright, Pixelmatch, Commander.js, EJS dependencies in package.json
+- [x] T003 [P] Configure ESLint and Prettier in .eslintrc.json and .prettierrc
+- [x] T004 [P] Configure TypeScript compiler in tsconfig.json
+- [x] T005 [P] Configure Jest for testing in jest.config.js
+- [x] T006 [P] Create GitHub Actions workflow in .github/workflows/ci.yml
 
 ## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
 **CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
 
 ### Contract Tests
-- [ ] T007 [P] Contract test for CLI primary command interface in tests/contract/test-cli-primary.test.ts
-- [ ] T008 [P] Contract test for CLI config commands in tests/contract/test-cli-config.test.ts
-- [ ] T009 [P] Contract test for CLI baseline commands in tests/contract/test-cli-baseline.test.ts
-- [ ] T010 [P] Contract test for CLI report commands in tests/contract/test-cli-report.test.ts
-- [ ] T011 [P] Contract test for HTML report format in tests/contract/test-report-format.test.ts
+- [x] T007 [P] Contract test for CLI primary command interface in tests/contract/test-cli-primary.test.ts
+- [x] T008 [P] Contract test for CLI config commands in tests/contract/test-cli-config.test.ts
+- [x] T009 [P] Contract test for CLI baseline commands in tests/contract/test-cli-baseline.test.ts
+- [x] T010 [P] Contract test for CLI report commands in tests/contract/test-cli-report.test.ts
+- [x] T011 [P] Contract test for HTML report format in tests/contract/test-report-format.test.ts
 
 ### Integration Tests
-- [ ] T012 [P] Integration test for basic cross-browser diff execution in tests/integration/test-basic-diff.test.ts
-- [ ] T013 [P] Integration test for baseline creation workflow in tests/integration/test-baseline-workflow.test.ts
-- [ ] T014 [P] Integration test for configuration file handling in tests/integration/test-config-handling.test.ts
-- [ ] T015 [P] Integration test for report generation in tests/integration/test-report-generation.test.ts
-- [ ] T016 [P] Integration test for error handling scenarios in tests/integration/test-error-handling.test.ts
+- [x] T012 [P] Integration test for basic cross-browser diff execution in tests/integration/test-basic-diff.test.ts
+- [x] T013 [P] Integration test for baseline creation workflow in tests/integration/test-baseline-workflow.test.ts
+- [x] T014 [P] Integration test for configuration file handling in tests/integration/test-config-handling.test.ts
+- [x] T015 [P] Integration test for report generation in tests/integration/test-report-generation.test.ts
+- [x] T016 [P] Integration test for error handling scenarios in tests/integration/test-error-handling.test.ts
 
 ## Phase 3.3: Core Implementation (ONLY after tests are failing)
 
 ### Data Models
-- [ ] T017 [P] TestSession model with UUID generation and validation in src/models/TestSession.ts
-- [ ] T018 [P] BrowserResult model with screenshot metadata in src/models/BrowserResult.ts
-- [ ] T019 [P] BaselineReference model with image hashing in src/models/BaselineReference.ts
-- [ ] T020 [P] DifferenceReport model with pixelmatch integration in src/models/DifferenceReport.ts
-- [ ] T021 [P] HTMLReport model with EJS template handling in src/models/HTMLReport.ts
-- [ ] T022 [P] Configuration types and validation in src/models/Config.ts
+- [x] T017: TestSession model with UUID generation in src/models/TestSession.ts
+- [x] T018: BrowserResult model with screenshot handling in src/models/BrowserResult.ts
+- [x] T019: BaselineReference model with image hashing in src/models/BaselineReference.ts
+- [x] T020: DifferenceReport model with pixelmatch integration in src/models/DifferenceReport.ts
+- [x] T021: HTMLReport model with EJS template handling in src/models/HTMLReport.ts
+- [x] T022: Config types and validation in src/models/Config.ts
 
 ### Core Services
-- [ ] T023 [P] BrowserService for Playwright browser management in src/services/BrowserService.ts
-- [ ] T024 [P] ScreenshotService for image capture and caching in src/services/ScreenshotService.ts
-- [ ] T025 [P] DiffService for Pixelmatch comparison logic in src/services/DiffService.ts
-- [ ] T026 [P] BaselineService for baseline management in src/services/BaselineService.ts
-- [ ] T027 [P] ReportService for HTML report generation in src/services/ReportService.ts
-- [ ] T028 [P] ConfigService for configuration file handling in src/services/ConfigService.ts
+- [x] T023: BrowserService with Playwright integration in src/services/BrowserService.ts
+- [x] T024: ScreenshotService with viewport handling in src/services/ScreenshotService.ts
+- [x] T025: DiffService with pixelmatch integration in src/services/DiffService.ts
+- [x] T026: BaselineService with image management in src/services/BaselineService.ts
+- [x] T027: ReportService with HTML generation in src/services/ReportService.ts
+- [x] T028: ConfigService with file handling in src/services/ConfigService.ts
 
 ### CLI Implementation
 - [ ] T029 Main CLI entry point with Commander.js setup in src/cli/index.ts
