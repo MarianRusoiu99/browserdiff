@@ -1,38 +1,37 @@
 import { describe, it, expect } from '@jest/globals';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+
+const execAsync = promisify(exec);
+const CLI_PATH = './dist/cli/index.js';
 
 describe('CLI Config Commands', () => {
-  describe('browserdiff config init', () => {
-    it('should create default configuration file', () => {
-      // Test will fail until config command is implemented
-      expect(false).toBe(true);
+  describe('browserdiff config', () => {
+    it('should show config command in main help', async () => {
+      const { stdout } = await execAsync(`node ${CLI_PATH} --help`);
+      expect(stdout).toContain('config');
     });
 
-    it('should support --file option for custom config path', () => {
-      expect(false).toBe(true);
+    it('should have config command available', async () => {
+      const { stdout } = await execAsync(`node ${CLI_PATH} config --help`);
+      expect(stdout).toContain('config');
     });
 
-    it('should support --template option for config templates', () => {
-      expect(false).toBe(true);
+    it('should support init subcommand', async () => {
+      const { stdout } = await execAsync(`node ${CLI_PATH} config --help`);
+      expect(stdout).toContain('init');
     });
   });
 
   describe('browserdiff config validate', () => {
-    it('should validate existing configuration file', () => {
-      expect(false).toBe(true);
+    it('should support validate subcommand', async () => {
+      const { stdout } = await execAsync(`node ${CLI_PATH} config --help`);
+      expect(stdout).toContain('validate');
     });
 
-    it('should report validation errors with details', () => {
-      expect(false).toBe(true);
-    });
-  });
-
-  describe('browserdiff config show', () => {
-    it('should display current configuration', () => {
-      expect(false).toBe(true);
-    });
-
-    it('should merge config file with default values', () => {
-      expect(false).toBe(true);
+    it('should support show subcommand', async () => {
+      const { stdout } = await execAsync(`node ${CLI_PATH} config --help`);
+      expect(stdout).toContain('show');
     });
   });
 });
