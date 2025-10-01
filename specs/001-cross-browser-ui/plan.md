@@ -1,8 +1,8 @@
 
-# Implementation Plan: [FEATURE]
+# Implementation Plan: Cross-Browser UI Diff CLI Tool
 
-**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
-**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
+**Branch**: `001-cross-browser-ui` | **Date**: 2025-10-01 | **Spec**: [spec.md](./spec.md)
+**Input**: Feature specification from `/specs/001-cross-browser-ui/spec.md`
 
 ## Execution Flow (/plan command scope)
 ```
@@ -31,23 +31,55 @@
 - Phase 3-4: Implementation execution (manual or via tools)
 
 ## Summary
-[Extract from feature spec: primary requirement + technical approach from research]
+A command-line tool that enables developers to verify UI consistency across multiple browsers by capturing screenshots, comparing them against baselines, and generating comprehensive HTML reports with visual difference highlights. Built with Node.js + TypeScript for portability, Playwright for browser automation, and Pixelmatch for pixel-level comparison.
 
 ## Technical Context
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Language/Version**: Node.js 18+ with TypeScript 5.0+  
+**Primary Dependencies**: Playwright (browser automation), Pixelmatch (image diff), Commander.js (CLI), EJS (templating)  
+**Storage**: File system (screenshots, baselines, reports, config files)  
+**Testing**: Jest (unit tests), Playwright Test (integration), Visual regression tests  
+**Target Platform**: Cross-platform CLI (Linux, macOS, Windows)
+**Project Type**: Single CLI application  
+**Performance Goals**: Parallel browser execution, cached screenshot/diff operations, <10s for single page diff  
+**Constraints**: Self-contained reports, <512MB memory per browser, portable output  
+**Scale/Scope**: Individual developer tool, handles multiple browsers simultaneously, generates comprehensive HTML reports
 
 ## Constitution Check
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+### I. Code Quality ✅
+- TypeScript enforced for type safety
+- ESLint + Prettier configured for consistent formatting
+- Small, composable functions planned (CLI layers, diff engine, reporting)
+- Comprehensive inline documentation required
+
+### II. Testing Standards ✅
+- Jest planned for unit tests of core logic
+- Playwright Test for CLI workflow integration tests
+- Visual regression tests using the diff engine itself
+- All PRs must include/update relevant tests
+
+### III. User Experience Consistency ✅
+- CLI follows standard patterns: `--help`, `--version`, `--browsers`
+- Clear, actionable error messages planned
+- HTML reports designed for readability and accessibility
+- Self-contained, shareable output
+
+### IV. Performance Requirements ✅
+- Parallel browser execution minimizes launch overhead
+- Screenshot and diff caching to avoid redundant work
+- Report generation optimized for large test suites
+- Memory constraints respected per constitution
+
+### V. Reporting Principles ✅
+- HTML reports show baseline, browser results, and difference highlights
+- Portable, self-contained output (single folder + assets)
+- Clear navigation and browsing experience planned
+
+### VI. Contribution Guidelines ✅
+- Branch naming: `001-cross-browser-ui` follows `###-feature-name` pattern
+- TypeScript linting and testing gates planned
+- Documentation (README, CLI help) will be maintained
 
 ## Project Structure
 
@@ -202,18 +234,25 @@ directories captured above]
 *This checklist is updated during execution flow*
 
 **Phase Status**:
-- [ ] Phase 0: Research complete (/plan command)
-- [ ] Phase 1: Design complete (/plan command)
-- [ ] Phase 2: Task planning complete (/plan command - describe approach only)
+- [x] Phase 0: Research complete (/plan command) - research.md created
+- [x] Phase 1: Design complete (/plan command) - data-model.md, contracts/, quickstart.md created
+- [x] Phase 2: Task planning complete (/plan command - approach described)
 - [ ] Phase 3: Tasks generated (/tasks command)
 - [ ] Phase 4: Implementation complete
 - [ ] Phase 5: Validation passed
 
 **Gate Status**:
-- [ ] Initial Constitution Check: PASS
-- [ ] Post-Design Constitution Check: PASS
-- [ ] All NEEDS CLARIFICATION resolved
-- [ ] Complexity deviations documented
+- [x] Initial Constitution Check: PASS - All principles aligned
+- [x] Post-Design Constitution Check: PASS - Design maintains compliance
+- [ ] All NEEDS CLARIFICATION resolved - Two items remain (FR-009, FR-012)
+- [x] Complexity deviations documented - No violations found
+
+**Generated Artifacts**:
+- ✅ research.md - Technical architecture and decisions
+- ✅ data-model.md - Core entities and relationships
+- ✅ contracts/cli-interface.md - Command-line interface specification  
+- ✅ contracts/report-format.md - HTML report structure
+- ✅ quickstart.md - User onboarding guide
 
 ---
 *Based on Constitution v2.0.0 - See `/memory/constitution.md`*

@@ -1,50 +1,92 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report:
+- Version change: 1.0.0 → 2.0.0 (major rewrite for UI Cross-Browser CLI Tool)
+- Modified principles: 
+  * I. Provider Defaults → I. Code Quality (renamed and redefined)
+  * II. Code Quality Principles → II. Testing Standards (expanded scope)
+  * III. Testing Standards → III. User Experience Consistency (redefined)
+  * IV. User Experience Consistency → IV. Performance Requirements (focused on browser optimization)
+  * V. Performance Requirements → V. Reporting Principles (new focus area)
+- Added sections: VI. Contribution Guidelines
+- Removed sections: Provider Defaults principle
+- Templates requiring updates: 
+  ✅ plan-template.md (Constitution Check section will reference new principles)
+  ✅ spec-template.md (aligned with new testing and UX requirements)
+  ✅ tasks-template.md (aligned with new contribution guidelines)
+  ✅ agent-file-template.md (no updates needed)
+- Follow-up TODOs: None - all principles clearly defined
+-->
+
+# UI Cross-Browser CLI Tool Constitution
+
+This document defines the guiding principles and development guidelines for the **UI Cross-Browser CLI Tool** project.  
+All contributors must adhere to these principles to ensure long-term maintainability, consistency, and quality.
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Code Quality
+All code MUST follow a consistent linting and formatting standard (ESLint + Prettier).
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+Functions MUST remain small, composable, and testable.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+Type safety MUST be enforced with TypeScript.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+**Rationale**: Consistent code quality standards ensure maintainability, reduce bugs, and enable effective collaboration across team members.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### II. Testing Standards
+Unit tests MUST be required for core logic (Jest or Vitest).
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+Integration tests MUST be required for Playwright CLI workflows.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+Visual regression tests MUST be used for browser rendering comparisons.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+Every pull request MUST include or update relevant tests.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+**Rationale**: Comprehensive testing prevents regressions and ensures reliability across different browser environments and CLI operations.
+
+### III. User Experience Consistency
+CLI commands MUST be intuitive and follow common UX patterns (`--help`, `--version`, `--browsers`, etc.).
+
+Error messages MUST be clear, actionable, and consistent.
+
+HTML reports MUST be readable, well-structured, and accessible.
+
+**Rationale**: Consistent UX reduces learning curve and increases tool adoption by providing predictable, professional interactions.
+
+### IV. Performance Requirements
+CLI execution MUST minimize unnecessary browser launches (parallel execution where possible).
+
+HTML report generation MUST handle large test suites without freezing.
+
+Screenshots and diffs MUST be cached where possible to avoid redundant work.
+
+**Rationale**: Performance optimization is critical for developer productivity and CI/CD pipeline efficiency, especially with multiple browser testing.
+
+### V. Reporting Principles
+The HTML report MUST show:
+- Baseline screenshot
+- Browser-specific results
+- Difference highlights
+
+Reports MUST be exportable and portable (single folder with HTML + images).
+
+**Rationale**: Clear, portable reporting enables effective debugging, collaboration, and integration into various workflows and environments.
+
+### VI. Contribution Guidelines
+Branch naming convention MUST follow: `feature/*`, `fix/*`, `chore/*`.
+
+PRs MUST pass lint, type check, and tests before merge.
+
+Documentation (README + CLI help) MUST stay up to date with every release.
+
+**Rationale**: Consistent contribution practices maintain code quality and ensure project documentation remains current and useful.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+- Any change to core principles MUST be updated in this constitution.  
+- The constitution itself MAY only be modified through consensus review.  
+- Violations of principles REQUIRE justification in PR descriptions.  
+- All PRs/reviews MUST verify compliance with these principles.  
+- Complexity beyond these standards MUST be justified or refactored.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 2.0.0 | **Ratified**: 2025-10-01 | **Last Amended**: 2025-10-01
