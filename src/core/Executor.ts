@@ -141,6 +141,18 @@ export class Executor {
           );
         }
       } catch (error) {
+        // Create a failed result for the browser
+        const failedResult = new BrowserResult(browserName, 'unknown', {
+          userAgent: 'unknown',
+          platform: 'unknown',
+          architecture: 'unknown',
+          headless: true,
+          viewport: this.config.viewport,
+          additionalFlags: [],
+        });
+        failedResult.setError((error as Error).message);
+        results.push(failedResult);
+        
         this.logger.error(
           `✗ ${browserName}: ${(error as Error).message}`
         );

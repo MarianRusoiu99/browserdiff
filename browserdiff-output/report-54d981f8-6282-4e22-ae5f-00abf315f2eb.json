@@ -1,0 +1,74 @@
+{
+  "session": {
+    "sessionId": "54d981f8-6282-4e22-ae5f-00abf315f2eb",
+    "targetUrl": "https://example.com",
+    "browsers": [
+      "chromium"
+    ],
+    "timestamp": "2025-10-01T07:29:10.634Z",
+    "viewport": {
+      "width": 1920,
+      "height": 1080,
+      "deviceScaleFactor": 1
+    },
+    "config": {
+      "browsers": [
+        "chromium"
+      ],
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "comparison": {
+        "threshold": 0.1,
+        "includeAA": true
+      },
+      "output": {
+        "directory": "./browserdiff-output",
+        "format": "html",
+        "embedAssets": true
+      },
+      "timeout": {
+        "pageLoad": 30000,
+        "screenshot": 5000
+      },
+      "retry": {
+        "attempts": 3,
+        "delay": 1000
+      },
+      "parallel": 3
+    },
+    "status": "completed",
+    "results": [
+      {
+        "browserName": "chromium",
+        "browserVersion": "140.0",
+        "screenshotPath": "browserdiff-output/screenshots/chromium-1759303752127.png",
+        "captureTimestamp": "2025-10-01T07:29:12.127Z",
+        "pageLoadTime": 67,
+        "errorMessage": null,
+        "status": "success",
+        "metadata": {
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/140.0.7339.186 Safari/537.36",
+          "platform": "Linux x86_64",
+          "architecture": "x64",
+          "headless": true,
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          },
+          "additionalFlags": []
+        }
+      }
+    ]
+  },
+  "report": {
+    "sessionId": "54d981f8-6282-4e22-ae5f-00abf315f2eb",
+    "baselineBrowser": "chromium",
+    "comparisons": [],
+    "overallStatus": "identical",
+    "createdAt": "2025-10-01T07:29:12.207Z"
+  },
+  "timestamp": "2025-10-01T07:29:12.216Z"
+}

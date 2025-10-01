@@ -47,3 +47,6 @@ temp/
 # Playwright
 playwright-report/
 test-results/
+
+# Results
+browserdiff-results/

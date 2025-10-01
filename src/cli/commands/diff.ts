@@ -5,6 +5,7 @@ import { ScreenshotService } from '../../services/ScreenshotService';
 import { DiffService } from '../../services/DiffService';
 import { ReportService } from '../../services/ReportService';
 import { TestSession } from '../../models/TestSession';
+import { BrowserResult } from '../../models/BrowserResult';
 import * as path from 'path';
 
 export const diffCommand = new Command('diff')
@@ -17,6 +18,7 @@ export const diffCommand = new Command('diff')
   .option('-o, --output <directory>', 'Output directory', './browserdiff-output')
   .option('-c, --config <path>', 'Config file path')
   .option('--baseline <browser>', 'Baseline browser for comparison', 'chromium')
+  .option('--ignore-https-errors', 'Ignore HTTPS certificate errors', false)
   .option('--open', 'Open report after generation', false)
   .option('--verbose', 'Verbose output', false)
   .action(async (url: string, options: DiffCommandOptions) => {
@@ -87,7 +89,7 @@ export const diffCommand = new Command('diff')
         }
 
         try {
-          const page = await browserService.createPage(browserName);
+          const page = await browserService.createPage(browserName, options.ignoreHttpsErrors);
           await browserService.navigateWithRetry(page, url);
 
           if (options.verbose) {
@@ -111,6 +113,20 @@ export const diffCommand = new Command('diff')
             );
           }
         } catch (error) {
+          // Create a failed result for the browser
+          const failedResult = new BrowserResult(browserName, 'unknown', {
+            userAgent: 'unknown',
+            platform: 'unknown',
+            architecture: 'unknown',
+            headless: true,
+            viewport: config.viewport,
+            additionalFlags: [],
+          });
+          failedResult.setError((error as Error).message);
+          
+          session.addResult(failedResult);
+          results.push(failedResult);
+
           if (options.verbose) {
             // eslint-disable-next-line no-console
             console.error(`✗ ${browserName}: ${(error as Error).message}`);
@@ -127,6 +143,12 @@ export const diffCommand = new Command('diff')
       );
       if (!baselineResult) {
         throw new Error(`Baseline browser ${options.baseline} not found`);
+      }
+      
+      if (baselineResult.status !== 'success') {
+        throw new Error(
+          `Baseline browser ${options.baseline} failed: ${baselineResult.errorMessage || 'Unknown error'}`
+        );
       }
 
       // Generate difference report
@@ -203,6 +225,7 @@ interface DiffCommandOptions {
   output: string;
   config?: string;
   baseline: string;
+  ignoreHttpsErrors: boolean;
   open: boolean;
   verbose: boolean;
 }

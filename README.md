@@ -17,8 +17,33 @@ BrowserDiff is a command-line tool that captures screenshots of web pages across
 
 ## Installation
 
+For production use:
+
 ```bash
 npm install -g @browserdiff/cli
+```
+
+For local development/testing:
+
+```bash
+# Clone and setup
+git clone <repository-url>
+cd BrowserDiff
+
+# Install dependencies
+npm install
+
+# Build the project
+npm run build
+
+# Install Playwright browsers
+npx playwright install chromium
+
+# Test locally (no global install needed!)
+node dist/cli/index.js diff https://example.com --browsers chromium --verbose
+
+# Or use the test script
+./test-local.sh
 ```
 
 Or use with npx:
@@ -106,6 +131,7 @@ browserdiff diff <url> [options]
 - `-o, --output <directory>` - Output directory (default: ./browserdiff-output)
 - `-c, --config <path>` - Config file path
 - `--baseline <browser>` - Baseline browser (default: chromium)
+- `--ignore-https-errors` - Ignore HTTPS certificate errors
 - `--open` - Open report after generation
 - `--verbose` - Verbose output
 
@@ -117,6 +143,11 @@ browserdiff diff https://example.com \
   --width 1920 --height 1080 \
   --threshold 0.05 \
   --open
+
+# Test site with invalid SSL certificate
+browserdiff diff https://example.com \
+  --ignore-https-errors \
+  --verbose
 ```
 
 ### `config`

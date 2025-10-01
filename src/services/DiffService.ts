@@ -102,6 +102,13 @@ export class DiffService {
         continue; // Skip comparing baseline with itself
       }
 
+      // Skip failed browsers
+      if (result.status !== 'success') {
+        // eslint-disable-next-line no-console
+        console.warn(`⚠️  Skipping comparison with ${result.browserName}: ${result.errorMessage || result.status}`);
+        continue;
+      }
+
       try {
         const comparison = await this.compareScreenshots(
           sessionId,

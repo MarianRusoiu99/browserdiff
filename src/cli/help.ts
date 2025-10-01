@@ -49,6 +49,7 @@ OPTIONS:
   -o, --output <directory>        Output directory (default: ./browserdiff-output)
   -c, --config <path>             Path to config file
   --baseline <browser>            Baseline browser for comparison (default: chromium)
+  --ignore-https-errors           Ignore HTTPS certificate errors
   --open                          Open report in browser after generation
   --verbose                       Enable verbose logging
 
@@ -60,6 +61,9 @@ EXAMPLES:
   browserdiff diff https://example.com \\
     --browsers chromium firefox webkit \\
     --width 1920 --height 1080
+
+  # Test site with invalid SSL certificate
+  browserdiff diff https://example.com --ignore-https-errors
 
   # Lower threshold for stricter comparison
   browserdiff diff https://example.com --threshold 0.05

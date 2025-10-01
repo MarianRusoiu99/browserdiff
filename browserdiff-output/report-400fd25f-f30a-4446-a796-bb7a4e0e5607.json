@@ -1,0 +1,149 @@
+{
+  "session": {
+    "sessionId": "400fd25f-f30a-4446-a796-bb7a4e0e5607",
+    "targetUrl": "https://outsnapped.com/ai-photo-booth-snapshift-artificial-intelligence",
+    "browsers": [
+      "chromium",
+      "firefox"
+    ],
+    "timestamp": "2025-10-01T07:51:56.483Z",
+    "viewport": {
+      "width": 1920,
+      "height": 1080,
+      "deviceScaleFactor": 1
+    },
+    "config": {
+      "browsers": [
+        "chromium",
+        "firefox"
+      ],
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "comparison": {
+        "threshold": 0.1,
+        "includeAA": true
+      },
+      "output": {
+        "directory": "./browserdiff-output",
+        "format": "html",
+        "embedAssets": true
+      },
+      "timeout": {
+        "pageLoad": 30000,
+        "screenshot": 5000
+      },
+      "retry": {
+        "attempts": 3,
+        "delay": 1000
+      },
+      "parallel": 3
+    },
+    "status": "completed",
+    "results": [
+      {
+        "browserName": "chromium",
+        "browserVersion": "140.0",
+        "screenshotPath": "browserdiff-output/screenshots/chromium-1759305122792.png",
+        "captureTimestamp": "2025-10-01T07:52:02.792Z",
+        "pageLoadTime": 222,
+        "errorMessage": null,
+        "status": "success",
+        "metadata": {
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/140.0.7339.186 Safari/537.36",
+          "platform": "Linux x86_64",
+          "architecture": "x64",
+          "headless": true,
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          },
+          "additionalFlags": []
+        }
+      },
+      {
+        "browserName": "firefox",
+        "browserVersion": "141.0",
+        "screenshotPath": "browserdiff-output/screenshots/firefox-1759305130151.png",
+        "captureTimestamp": "2025-10-01T07:52:10.150Z",
+        "pageLoadTime": 229,
+        "errorMessage": null,
+        "status": "success",
+        "metadata": {
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64; rv:141.0) Gecko/20100101 Firefox/141.0",
+          "platform": "Linux x86_64",
+          "architecture": "x64",
+          "headless": true,
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          },
+          "additionalFlags": []
+        }
+      }
+    ]
+  },
+  "report": {
+    "sessionId": "400fd25f-f30a-4446-a796-bb7a4e0e5607",
+    "baselineBrowser": "chromium",
+    "comparisons": [
+      {
+        "browserName": "firefox",
+        "baselineResult": {
+          "browserName": "chromium",
+          "browserVersion": "140.0",
+          "screenshotPath": "browserdiff-output/screenshots/chromium-1759305122792.png",
+          "captureTimestamp": "2025-10-01T07:52:02.792Z",
+          "pageLoadTime": 222,
+          "errorMessage": null,
+          "status": "success",
+          "metadata": {
+            "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/140.0.7339.186 Safari/537.36",
+            "platform": "Linux x86_64",
+            "architecture": "x64",
+            "headless": true,
+            "viewport": {
+              "width": 1920,
+              "height": 1080
+            },
+            "additionalFlags": []
+          }
+        },
+        "currentResult": {
+          "browserName": "firefox",
+          "browserVersion": "141.0",
+          "screenshotPath": "browserdiff-output/screenshots/firefox-1759305130151.png",
+          "captureTimestamp": "2025-10-01T07:52:10.150Z",
+          "pageLoadTime": 229,
+          "errorMessage": null,
+          "status": "success",
+          "metadata": {
+            "userAgent": "Mozilla/5.0 (X11; Linux x86_64; rv:141.0) Gecko/20100101 Firefox/141.0",
+            "platform": "Linux x86_64",
+            "architecture": "x64",
+            "headless": true,
+            "viewport": {
+              "width": 1920,
+              "height": 1080
+            },
+            "additionalFlags": []
+          }
+        },
+        "metrics": {
+          "totalPixels": 2073600,
+          "diffPixels": 22960,
+          "diffPercentage": 1.107253086419753,
+          "matchPercentage": 98.89274691358025
+        },
+        "status": "different",
+        "threshold": 0.1,
+        "timestamp": "2025-10-01T07:52:11.489Z"
+      }
+    ],
+    "overallStatus": "different",
+    "createdAt": "2025-10-01T07:52:10.935Z"
+  },
+  "timestamp": "2025-10-01T07:52:11.519Z"
+}

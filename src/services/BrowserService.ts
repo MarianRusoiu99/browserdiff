@@ -43,24 +43,26 @@ export class BrowserService {
 
   public async createContext(
     browserName: string,
-    viewport: Viewport
+    viewport: Viewport,
+    ignoreHTTPSErrors: boolean = false
   ): Promise<BrowserContext> {
     const browser = await this.launchBrowser(browserName);
     const context = await browser.newContext({
       viewport: { width: viewport.width, height: viewport.height },
       deviceScaleFactor: viewport.deviceScaleFactor || 1,
+      ignoreHTTPSErrors,
     });
 
     this.contexts.set(browserName, context);
     return context;
   }
 
-  public async createPage(browserName: string): Promise<Page> {
+  public async createPage(browserName: string, ignoreHTTPSErrors: boolean = false): Promise<Page> {
     const contextKey = browserName;
     let context = this.contexts.get(contextKey);
 
     if (!context) {
-      context = await this.createContext(browserName, this.config.viewport);
+      context = await this.createContext(browserName, this.config.viewport, ignoreHTTPSErrors);
     }
 
     return await context.newPage();
