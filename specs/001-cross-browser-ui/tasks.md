@@ -84,20 +84,20 @@
 - [x] T028: ConfigService with file handling in src/services/ConfigService.ts
 
 ### CLI Implementation
-- [ ] T029 Main CLI entry point with Commander.js setup in src/cli/index.ts
-- [ ] T030 Primary diff command implementation in src/cli/commands/diff.ts
-- [ ] T031 Config command implementation in src/cli/commands/config.ts
-- [ ] T032 Baseline command implementation in src/cli/commands/baseline.ts
-- [ ] T033 Report command implementation in src/cli/commands/report.ts
-- [ ] T034 CLI option validation and error handling in src/cli/validation.ts
+- [x] T029 Main CLI entry point with Commander.js setup in src/cli/index.ts
+- [x] T030 Primary diff command implementation in src/cli/commands/diff.ts
+- [x] T031 Config command implementation in src/cli/commands/config.ts
+- [x] T032 Baseline command implementation in src/cli/commands/baseline.ts
+- [x] T033 Report command implementation in src/cli/commands/report.ts
+- [x] T034 CLI option validation and error handling in src/cli/validation.ts
 
 ## Phase 3.4: Integration
-- [ ] T035 Orchestrate services in main execution flow in src/core/Executor.ts
-- [ ] T036 Parallel browser execution with Promise.all coordination in src/core/ParallelExecutor.ts
-- [ ] T037 File system operations and cleanup in src/utils/FileSystem.ts
-- [ ] T038 Logging and verbose output implementation in src/utils/Logger.ts
-- [ ] T039 Error handling and user-friendly messages in src/utils/ErrorHandler.ts
-- [ ] T040 Performance monitoring and timeout handling in src/utils/Performance.ts
+- [x] T035 Orchestrate services in main execution flow in src/core/Executor.ts
+- [x] T036 Parallel browser execution with Promise.all coordination in src/core/ParallelExecutor.ts
+- [x] T037 File system operations and cleanup in src/utils/FileSystem.ts
+- [x] T038 Logging and verbose output implementation in src/utils/Logger.ts
+- [x] T039 Error handling and user-friendly messages in src/utils/ErrorHandler.ts
+- [x] T040 Performance monitoring and timeout handling in src/utils/Performance.ts
 
 ## Phase 3.5: Polish
 - [ ] T041 [P] Unit tests for TestSession model in tests/unit/models/TestSession.test.ts
@@ -107,9 +107,9 @@
 - [ ] T045 [P] Unit tests for CLI option parsing in tests/unit/cli/validation.test.ts
 - [ ] T046 [P] Performance tests for parallel execution <10s in tests/performance/parallel-execution.test.ts
 - [ ] T047 [P] Memory usage tests <512MB per browser in tests/performance/memory-usage.test.ts
-- [ ] T048 [P] Update README.md with installation and usage instructions
-- [ ] T049 [P] Create CLI help documentation in src/cli/help.ts
-- [ ] T050 [P] Add TypeScript declaration files and exports in src/index.ts
+- [x] T048 [P] Update README.md with installation and usage instructions
+- [x] T049 [P] Create CLI help documentation in src/cli/help.ts
+- [x] T050 [P] Add TypeScript declaration files and exports in src/index.ts
 
 ## Dependencies
 
