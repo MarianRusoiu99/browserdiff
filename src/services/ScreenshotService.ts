@@ -3,6 +3,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { TestConfig } from '../models/Config';
 import { BrowserResult, BrowserMetadata } from '../models/BrowserResult';
+import { ScreenshotResult, createScreenshotResult } from '../models/screenshot-result';
+import { ScreenshotConfig, DEFAULT_SCREENSHOT_CONFIG } from '../models/screenshot-config';
+import { BrowserType } from 'playwright';
 
 export class ScreenshotService {
   private config: TestConfig;
@@ -16,86 +19,105 @@ export class ScreenshotService {
     browserName: string,
     outputDir: string
   ): Promise<BrowserResult> {
-    const startTime = Date.now();
+    const screenshotConfig = this.config.screenshot || DEFAULT_SCREENSHOT_CONFIG;
+    const result = await this.captureScreenshotEnhanced(page, browserName as unknown as BrowserType, outputDir, screenshotConfig);
 
-    // Get page metadata first
-    const metadata = await this.getPageMetadata(page);
-    
-    // Get browser version
-    const browserVersion = await this.getBrowserVersion(page, browserName);
-    
-    // Create result with required parameters
-    const result = new BrowserResult(browserName, browserVersion, metadata);
+    // Convert to legacy BrowserResult format
+    const metadata: BrowserMetadata = {
+      userAgent: '',
+      platform: '',
+      architecture: process.arch,
+      headless: true,
+      viewport: { width: result.width, height: result.height },
+      additionalFlags: []
+    };
+    const legacyResult = new BrowserResult(browserName, 'unknown', metadata);
+
+    legacyResult.setScreenshot(result.filePath);
+    legacyResult.setPageLoadTime(result.captureTime);
+
+    if (result.wasTruncated) {
+      legacyResult.setError(`Screenshot truncated: ${result.truncationReason}`);
+    }
+
+    return legacyResult;
+  }
+
+  // NEW: Enhanced screenshot capture with full page support
+  public async captureScreenshotEnhanced(
+    page: Page,
+    browser: BrowserType,
+    outputDir: string,
+    screenshotConfig: ScreenshotConfig = DEFAULT_SCREENSHOT_CONFIG
+  ): Promise<ScreenshotResult> {
+    const startTime = Date.now();
 
     try {
       // Ensure output directory exists
       await fs.promises.mkdir(outputDir, { recursive: true });
 
+      // Get page height for full page screenshots
+      const pageHeight = screenshotConfig.fullPage
+        ? await page.evaluate('document.body.scrollHeight') as number
+        : 0;
+
+      // Check if page height exceeds maxHeight
+      const willTruncate = screenshotConfig.fullPage && pageHeight > screenshotConfig.maxHeight;
+      const actualHeight = willTruncate ? screenshotConfig.maxHeight : (screenshotConfig.fullPage ? pageHeight : 0);
+
       // Generate screenshot filename
       const timestamp = Date.now();
-      const filename = `${browserName}-${timestamp}.png`;
+      const filename = `${browser}-${timestamp}.png`;
       const screenshotPath = path.join(outputDir, filename);
 
-      // Capture screenshot with timeout
+      // Capture screenshot with enhanced options
       await Promise.race([
         page.screenshot({
           path: screenshotPath,
-          fullPage: false,
+          fullPage: screenshotConfig.fullPage,
           type: 'png',
         }),
-        this.timeoutPromise(this.config.timeout.screenshot),
+        this.timeoutPromise(screenshotConfig.timeout),
       ]);
 
-      // Read screenshot data
-      const screenshotBuffer = await fs.promises.readFile(screenshotPath);
+      // Get actual screenshot dimensions
+      // Note: In a real implementation, you'd use a PNG library to get dimensions
+      // For now, we'll use viewport size as approximation
+      const viewport = page.viewportSize() || { width: 1920, height: 1080 };
+      const width = viewport.width;
+      const height = screenshotConfig.fullPage ? actualHeight : viewport.height;
 
-      // Set screenshot data
-      result.setScreenshot(screenshotPath, screenshotBuffer);
+      const captureTime = Date.now() - startTime;
 
-      // Calculate page load time
-      const pageLoadTime = Date.now() - startTime;
-      result.setPageLoadTime(pageLoadTime);
-    } catch (error) {
-      if (error instanceof Error) {
-        if (error.message.includes('Timeout')) {
-          result.setTimeout();
-        } else {
-          result.setError(error.message);
+      return createScreenshotResult(
+        browser,
+        screenshotPath,
+        width,
+        height,
+        {
+          isFullPage: screenshotConfig.fullPage,
+          actualPageHeight: pageHeight,
+          captureTime,
+          wasTruncated: willTruncate,
+          truncationReason: willTruncate ? `Page height ${pageHeight}px exceeded maxHeight ${screenshotConfig.maxHeight}px` : undefined
         }
-      } else {
-        result.setError('Unknown error during screenshot capture');
-      }
-    }
+      );
+    } catch (error) {
+      const captureTime = Date.now() - startTime;
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
-    return result;
-  }
-
-  private async getPageMetadata(page: Page): Promise<BrowserMetadata> {
-    const userAgent = (await page.evaluate('navigator.userAgent')) as string;
-    const platform = (await page.evaluate('navigator.platform')) as string;
-    const viewport = page.viewportSize() || { width: 0, height: 0 };
-
-    return {
-      userAgent,
-      platform,
-      architecture: process.arch,
-      headless: true,
-      viewport,
-      additionalFlags: [],
-    };
-  }
-
-  private async getBrowserVersion(
-    page: Page,
-    _browserName: string
-  ): Promise<string> {
-    try {
-      const userAgent = (await page.evaluate('navigator.userAgent')) as string;
-      // Extract version from user agent
-      const match = userAgent.match(/(?:Chrome|Firefox|Safari)\/(\d+\.\d+)/);
-      return match ? match[1] : 'unknown';
-    } catch {
-      return 'unknown';
+      // Return error result
+      return createScreenshotResult(
+        browser,
+        '',
+        0,
+        0,
+        {
+          captureTime,
+          wasTruncated: false,
+          truncationReason: `Capture failed: ${errorMessage}`
+        }
+      );
     }
   }
 

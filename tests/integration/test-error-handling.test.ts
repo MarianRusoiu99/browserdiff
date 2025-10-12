@@ -8,7 +8,7 @@ describe('Error Handling Scenarios', () => {
 
   it('should handle browser launch failures', async () => {
     const config: TestConfig = {
-      browsers: ['invalid-browser' as any],
+      browsers: ['invalid-browser'],
       viewport: { width: 1280, height: 720 },
       timeout: { pageLoad: 30000, screenshot: 5000 },
       retry: { attempts: 1, delay: 100 },

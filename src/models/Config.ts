@@ -1,3 +1,6 @@
+import { ScreenshotConfig, DEFAULT_SCREENSHOT_CONFIG } from './screenshot-config';
+import { ReportConfig, DEFAULT_REPORT_CONFIG } from './report-config';
+
 export interface Viewport {
   width: number;
   height: number;
@@ -27,6 +30,7 @@ export interface RetryConfig {
 }
 
 export interface TestConfig {
+  // Existing properties (preserved for compatibility)
   browsers: string[];
   viewport: Viewport;
   comparison: ComparisonConfig;
@@ -34,6 +38,13 @@ export interface TestConfig {
   timeout: TimeoutConfig;
   retry: RetryConfig;
   parallel?: number;
+
+  // NEW: Enhanced properties for full page screenshots and report organization
+  url?: string;                    // Target URL for testing
+  outputDir?: string;              // Alternative to output.directory
+  threshold?: number;              // Alternative to comparison.threshold
+  screenshot?: ScreenshotConfig;   // Screenshot configuration
+  reporting?: ReportConfig;        // Report organization configuration
 }
 
 export const DEFAULT_CONFIG: TestConfig = {
@@ -61,6 +72,9 @@ export const DEFAULT_CONFIG: TestConfig = {
     delay: 1000,
   },
   parallel: 3,
+  // NEW: Default values for enhanced properties
+  screenshot: DEFAULT_SCREENSHOT_CONFIG,
+  reporting: DEFAULT_REPORT_CONFIG,
 };
 
 export function validateConfig(config: Partial<TestConfig>): string[] {
