@@ -329,6 +329,41 @@ npm run lint
 npm run format
 ```
 
+## Troubleshooting
+
+### WebKit Dependencies on Linux
+
+If you see errors about missing WebKit dependencies (especially on Arch Linux or rolling-release distributions):
+
+```
+⚠️  Skipping comparison with webkit: browserType.launch: 
+Missing libraries: libicudata.so.66, libicui18n.so.66...
+```
+
+**Quick Solution**: Use Chromium and Firefox only:
+```bash
+browserdiff diff https://example.com --browsers chromium firefox
+```
+
+**Full Solution**: See [WEBKIT_DEPENDENCIES.md](WEBKIT_DEPENDENCIES.md) for detailed instructions on:
+- Installing ICU 66 from AUR (Arch Linux)
+- Using Docker for guaranteed compatibility
+- Understanding the ICU version mismatch issue
+
+Chromium and Firefox provide excellent cross-browser coverage. WebKit is primarily needed for Safari-specific testing.
+
+### HTTPS Certificate Errors
+
+If testing sites with invalid SSL certificates:
+
+```bash
+browserdiff diff https://example.com --ignore-https-errors
+```
+
+### Permission Errors with npm link
+
+See [LOCAL_TESTING.md](LOCAL_TESTING.md) for alternative testing methods without global installation.
+
 ## Contributing
 
 Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details.
