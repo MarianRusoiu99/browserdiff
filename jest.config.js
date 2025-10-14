@@ -18,14 +18,11 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'js', 'json'],
   transform: {
-    '^.+\\.ts$': 'ts-jest',
-  },
-  globals: {
-    'ts-jest': {
+    '^.+\\.ts$': ['ts-jest', {
       tsconfig: {
         esModuleInterop: true,
       },
-    },
+    }],
   },
   testTimeout: 30000,
 };

@@ -128,11 +128,7 @@ describe('CLI Primary Command Interface', () => {
   describe('Input Validation', () => {
     it('should validate URL format', async () => {
       // Invalid command should show error
-      try {
-        await execAsync(`node ${CLI_PATH} invalid-url`);
-      } catch (error: any) {
-        expect(error.message).toContain('unknown command');
-      }
+      await expect(execAsync(`node ${CLI_PATH} invalid-url`)).rejects.toThrow('unknown command');
     });
 
     it('should show available commands when no command provided', async () => {

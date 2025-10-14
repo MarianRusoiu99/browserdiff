@@ -2,11 +2,14 @@ import { TestConfig } from '../models/Config';
 import { TestSession } from '../models/TestSession';
 import { BrowserResult } from '../models/BrowserResult';
 import { DifferenceReport } from '../models/DifferenceReport';
+import { ReportStructure } from '../models/report-structure';
 import { BrowserService } from '../services/BrowserService';
 import { ScreenshotService } from '../services/ScreenshotService';
 import { DiffService } from '../services/DiffService';
 import { ReportService } from '../services/ReportService';
+import { DirectoryService } from '../services/DirectoryService';
 import { Logger } from '../utils/Logger';
+import { DEFAULT_REPORT_CONFIG } from '../models/report-config';
 import * as path from 'path';
 
 export interface ExecutionResult {
@@ -23,6 +26,7 @@ export class Executor {
   private screenshotService: ScreenshotService;
   private diffService: DiffService;
   private reportService: ReportService;
+  private directoryService: DirectoryService;
 
   constructor(config: TestConfig, logger?: Logger) {
     this.config = config;
@@ -31,6 +35,11 @@ export class Executor {
     this.screenshotService = new ScreenshotService(config);
     this.diffService = new DiffService(config);
     this.reportService = new ReportService(config);
+    this.directoryService = new DirectoryService();
+  }
+
+  public async openReport(reportPath: string): Promise<void> {
+    return this.reportService.openReport(reportPath);
   }
 
   public async execute(
@@ -45,8 +54,19 @@ export class Executor {
       this.logger.info(`Baseline browser: ${baselineBrowser}`);
       this.logger.info(`Browsers: ${this.config.browsers.join(', ')}`);
 
+      // Check if structured output is enabled
+      const reportConfig = this.config.reporting || DEFAULT_REPORT_CONFIG;
+      let structure: ReportStructure | undefined;
+
+      if (reportConfig.structured) {
+        // Create structured directory
+        structure = await this.reportService.createStructuredDirectory(url);
+        this.logger.info(`Created structured directory: ${structure.baseDirectory}`);
+      }
+
       // Capture screenshots for all browsers
-      const results = await this.captureScreenshots(url);
+      // The screenshot config is already in this.config and will be used by ScreenshotService
+      const results = await this.captureScreenshots(url, structure);
 
       // Add results to session
       for (const result of results) {
@@ -70,26 +90,34 @@ export class Executor {
 
       // Generate difference report
       this.logger.info('Generating difference report...');
+      
+      const outputDir = structure 
+        ? this.directoryService.getAbsolutePaths(structure).diffsDir
+        : this.config.output.directory;
+
       const report = await this.diffService.generateDifferenceReport(
         session.sessionId,
         baselineBrowser,
         baselineResult,
         results,
-        this.config.output.directory
+        outputDir
       );
 
       session.complete();
 
-      // Generate HTML report
-      const reportPath = await this.reportService.generateHTMLReport(
-        session,
-        report
-      );
+      // Generate HTML report (structured or flat)
+      const reportPath = structure
+        ? await this.reportService.generateHTMLReportStructured(session, report, structure)
+        : await this.reportService.generateHTMLReport(session, report);
 
       this.logger.info(`Report generated: ${reportPath}`);
 
-      // Save JSON data
-      await this.reportService.saveReportData(session, report);
+      // Save JSON data (structured or flat)
+      if (structure) {
+        await this.reportService.saveReportDataStructured(session, report, structure);
+      } else {
+        await this.reportService.saveReportData(session, report);
+      }
 
       return {
         session,
@@ -106,12 +134,16 @@ export class Executor {
     }
   }
 
-  private async captureScreenshots(url: string): Promise<BrowserResult[]> {
+  private async captureScreenshots(
+    url: string,
+    structure?: ReportStructure
+  ): Promise<BrowserResult[]> {
     const results: BrowserResult[] = [];
-    const screenshotDir = path.join(
-      this.config.output.directory,
-      'screenshots'
-    );
+    
+    // Determine screenshot directory
+    const screenshotDir = structure
+      ? this.directoryService.getAbsolutePaths(structure).screenshotsDir
+      : path.join(this.config.output.directory, 'screenshots');
 
     for (const browserName of this.config.browsers) {
       this.logger.info(`Launching ${browserName}...`);
@@ -123,12 +155,16 @@ export class Executor {
         await this.browserService.navigateWithRetry(page, url);
 
         this.logger.info(`Capturing screenshot for ${browserName}...`);
+        
+        // Use enhanced screenshot method with config via the legacy wrapper
+        // The captureScreenshot method will call captureScreenshotEnhanced internally
+        // and properly handle the BrowserType conversion
         const result = await this.screenshotService.captureScreenshot(
           page,
           browserName,
           screenshotDir
         );
-
+        
         results.push(result);
 
         if (result.status === 'success') {
