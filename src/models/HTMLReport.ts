@@ -29,7 +29,7 @@ export class HTMLReport {
       session,
       report,
       timestamp: new Date().toISOString(),
-      title: `BrowserDiff Report - ${session.targetUrl}`,
+      title: `browserdiff Report - ${session.targetUrl}`,
     };
   }
 

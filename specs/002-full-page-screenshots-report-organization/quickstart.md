@@ -1,10 +1,10 @@
 # Quickstart: Full Page Screenshots and Report Organization
 
 ## Overview
-This quickstart demonstrates the new full page screenshot and organized report features in BrowserDiff CLI.
+This quickstart demonstrates the new full page screenshot and organized report features in browserdiff CLI.
 
 ## Prerequisites
-- BrowserDiff CLI installed (`npm install -g @browserdiff/cli`)
+- browserdiff CLI installed (`npm install -g @browserdiff/cli`)
 - Node.js 18+ and npm installed
 - Test website accessible (we'll use `https://example.com`)
 
@@ -326,4 +326,4 @@ jq '.performance' browserdiff-output/*/report.json
 ✅ **Compatibility**: Existing workflows unchanged, new features opt-in  
 ✅ **Quality**: Clear error messages, comprehensive validation  
 
-This quickstart provides everything needed to start using the new full page screenshot and report organization features in BrowserDiff CLI.
+This quickstart provides everything needed to start using the new full page screenshot and report organization features in browserdiff CLI.

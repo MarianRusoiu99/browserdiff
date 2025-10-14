@@ -328,4 +328,4 @@ const directoryErrors = {
 - Documentation for upgrading existing automation scripts
 - Compatibility testing with existing report parsing tools
 
-This contract specification ensures reliable, consistent behavior for all new features while maintaining full backward compatibility with existing BrowserDiff usage patterns.
+This contract specification ensures reliable, consistent behavior for all new features while maintaining full backward compatibility with existing browserdiff usage patterns.

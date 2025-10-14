@@ -47,7 +47,7 @@ describe('HTML Report Format Contract', () => {
       const reportPath = await service.generateHTMLReport(session, report);
       const content = fs.readFileSync(reportPath, 'utf-8');
       
-      expect(content).toContain('BrowserDiff');
+      expect(content).toContain('browserdiff');
     });
 
     it('should contain session information', async () => {

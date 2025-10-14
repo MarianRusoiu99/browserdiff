@@ -31,7 +31,7 @@
 - Phase 3-4: Implementation execution (manual or via tools)
 
 ## Summary
-Enhance BrowserDiff CLI to capture full page screenshots (instead of viewport-only) and organize reports into individual timestamped folders with sanitized URL naming. Primary requirements: Add `--full-page` CLI flag using Playwright's fullPage option, create structured output directories with format `YYYY-MM-DD_HH-mm-ss_sanitized-url`, maintain backward compatibility. Technical approach: Extend ScreenshotService for full-page capture, enhance ReportService for folder organization, add URL sanitization utilities.
+Enhance browserdiff CLI to capture full page screenshots (instead of viewport-only) and organize reports into individual timestamped folders with sanitized URL naming. Primary requirements: Add `--full-page` CLI flag using Playwright's fullPage option, create structured output directories with format `YYYY-MM-DD_HH-mm-ss_sanitized-url`, maintain backward compatibility. Technical approach: Extend ScreenshotService for full-page capture, enhance ReportService for folder organization, add URL sanitization utilities.
 
 ## Technical Context
 **Language/Version**: TypeScript 5.0+ with Node.js 18+  

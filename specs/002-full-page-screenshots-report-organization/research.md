@@ -1,7 +1,7 @@
 # Technical Research: Full Page Screenshots and Report Organization
 
 ## Research Overview
-This document consolidates technical research for implementing full page screenshots and organized report structure in BrowserDiff CLI.
+This document consolidates technical research for implementing full page screenshots and organized report structure in browserdiff CLI.
 
 ## Research Items
 

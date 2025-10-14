@@ -1,8 +1,8 @@
-# BrowserDiff
+# browserdiff
 
 > Cross-browser visual regression testing made simple
 
-BrowserDiff compares how websites render across different browsers (Chromium, Firefox, WebKit) and generates beautiful visual difference reports.
+browserdiff compares how websites render across different browsers (Chromium, Firefox, WebKit) and generates beautiful visual difference reports.
 
 ## ✨ Features
 
@@ -41,7 +41,7 @@ npx playwright install
 
 ```bash
 git clone <repository-url>
-cd BrowserDiff
+cd browserdiff
 npm install
 npm run build
 
@@ -94,7 +94,7 @@ Options:
 
 ## 📊 Reports
 
-BrowserDiff generates organized HTML reports with each test run in its own folder:
+browserdiff generates organized HTML reports with each test run in its own folder:
 
 - **Organized Structure**: Each test in timestamped folder (e.g., `2025-10-14_23-13-22_413_example.com`)
 - **Visual Comparisons**: Side-by-side browser screenshots
@@ -207,7 +207,7 @@ EXIT_CODE=$?
 
 ### Page Readiness Detection
 
-BrowserDiff waits for pages to be fully loaded before capturing:
+browserdiff waits for pages to be fully loaded before capturing:
 
 - ✅ All images loaded (`img.complete`)
 - ✅ Web fonts ready (`document.fonts.ready`)
@@ -265,7 +265,7 @@ jobs:
         with:
           node-version: '18'
       
-      - name: Install BrowserDiff
+      - name: Install browserdiff
         run: |
           npm install -g @browserdiff/cli
           npx playwright install --with-deps
@@ -287,7 +287,7 @@ jobs:
 ```bash
 # Clone repository
 git clone <repository-url>
-cd BrowserDiff
+cd browserdiff
 
 # Install dependencies
 npm install

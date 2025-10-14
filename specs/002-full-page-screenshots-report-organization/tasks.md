@@ -129,4 +129,4 @@ Task: "Enhanced DiffResult interface in src/models/diff-result.ts"
 - Services before CLI
 - CLI before configuration
 - Everything before polish</content>
-<parameter name="filePath">/home/vali/Apps/BrowserDiff/BrowserDiff/specs/002-full-page-screenshots-report-organization/tasks.md
+<parameter name="filePath">/home/vali/Apps/browserdiff/browserdiff/specs/002-full-page-screenshots-report-organization/tasks.md

@@ -1,6 +1,6 @@
 export const HELP_TEXT = {
   main: `
-BrowserDiff - Cross-browser UI testing and visual regression tool
+browserdiff - Cross-browser UI testing and visual regression tool
 
 USAGE:
   browserdiff <command> [options]
@@ -77,7 +77,7 @@ EXIT CODES:
 `,
 
   config: `
-Manage BrowserDiff configuration
+Manage browserdiff configuration
 
 USAGE:
   browserdiff config <command> [options]
@@ -163,7 +163,7 @@ WORKFLOW:
 `,
 
   report: `
-Manage and view BrowserDiff reports
+Manage and view browserdiff reports
 
 USAGE:
   browserdiff report <command> [options]

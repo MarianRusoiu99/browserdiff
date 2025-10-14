@@ -41,7 +41,7 @@ describe('Report Generation', () => {
     expect(fs.existsSync(reportPath)).toBe(true);
     const content = fs.readFileSync(reportPath, 'utf-8');
     expect(content).toContain('<!DOCTYPE html>');
-    expect(content).toContain('BrowserDiff Report');
+    expect(content).toContain('browserdiff Report');
   });
 
   it('should embed all assets in report', async () => {

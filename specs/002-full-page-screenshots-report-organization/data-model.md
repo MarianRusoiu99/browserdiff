@@ -1,7 +1,7 @@
 # Data Model: Full Page Screenshots and Report Organization
 
 ## Overview
-This document defines the data models and entities for implementing full page screenshots and organized report structure in BrowserDiff CLI.
+This document defines the data models and entities for implementing full page screenshots and organized report structure in browserdiff CLI.
 
 ## Core Entities
 
@@ -314,4 +314,4 @@ function migrateConfig(legacyConfig: any): TestConfig {
 - Directory structure accommodates both legacy and structured modes
 - Artifact cleanup utilities understand new organization
 
-This data model provides a solid foundation for implementing full page screenshots and report organization while maintaining full backward compatibility with existing BrowserDiff installations.
+This data model provides a solid foundation for implementing full page screenshots and report organization while maintaining full backward compatibility with existing browserdiff installations.

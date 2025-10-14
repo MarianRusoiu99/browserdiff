@@ -2,7 +2,7 @@
 
 ## Overview
 
-Enhance the BrowserDiff CLI tool to capture full page screenshots (instead of just the viewport) and organize reports into individual folders with improved naming conventions.
+Enhance the browserdiff CLI tool to capture full page screenshots (instead of just the viewport) and organize reports into individual folders with improved naming conventions.
 
 ## User Stories
 
@@ -203,7 +203,7 @@ function sanitizeUrl(url: string): string {
 ### External Dependencies
 - Playwright (existing): Full page screenshot support
 - Node.js fs/path modules: Directory and file operations
-- Existing BrowserDiff architecture: ScreenshotService, ReportService, ConfigService
+- Existing browserdiff architecture: ScreenshotService, ReportService, ConfigService
 
 ### Internal Dependencies
 - Extend TestConfig interface
