@@ -12,165 +12,240 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #f5f5f5;
-            color: #333;
-            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #1f2937;
+            min-height: 100vh;
+            padding: 40px 20px;
         }
         
         .container {
             max-width: 1400px;
             margin: 0 auto;
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
         }
         
         header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 30px;
+            padding: 48px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
         }
         
         h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
         }
         
         .meta {
-            opacity: 0.9;
-            font-size: 14px;
+            opacity: 0.95;
+            font-size: 15px;
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .meta div {
+            margin-bottom: 4px;
+        }
+        
+        .meta strong {
+            display: inline-block;
+            min-width: 100px;
+            font-weight: 600;
         }
         
         .status {
             display: inline-block;
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-weight: 600;
-            font-size: 12px;
-            margin-left: 10px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 13px;
+            margin-left: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
         
         .status.identical {
-            background: #10b981;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
         }
         
         .status.within-threshold {
-            background: #f59e0b;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             color: white;
         }
         
         .status.different {
-            background: #ef4444;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
             color: white;
         }
         
         .content {
-            padding: 30px;
+            padding: 40px;
         }
         
         .section {
-            margin-bottom: 40px;
+            margin-bottom: 48px;
         }
         
         .section h2 {
-            font-size: 20px;
-            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
             color: #667eea;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .section h2::before {
+            content: '';
+            width: 4px;
+            height: 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
         }
         
         .comparison-grid {
             display: grid;
-            gap: 20px;
+            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
         }
         
         .comparison-item {
-            border: 1px solid #e5e5e5;
-            border-radius: 6px;
-            padding: 20px;
-            background: #fafafa;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .comparison-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
         }
         
         .comparison-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e5e7eb;
         }
         
         .browser-name {
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 20px;
+            font-weight: 700;
+            color: #1f2937;
         }
         
         .metrics {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 16px;
         }
         
         .metric {
             background: white;
-            padding: 12px;
-            border-radius: 4px;
-            border-left: 3px solid #667eea;
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
         
         .metric-label {
-            font-size: 12px;
-            color: #666;
+            font-size: 11px;
+            color: #6b7280;
             text-transform: uppercase;
-            margin-bottom: 4px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
         }
         
         .metric-value {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-        }
-        
-        .screenshots {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .screenshot-box {
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        
-        .screenshot-label {
-            background: #f5f5f5;
-            padding: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            text-align: center;
-        }
-        
-        .screenshot-img {
-            width: 100%;
-            display: block;
+            font-size: 20px;
+            font-weight: 700;
+            color: #1f2937;
         }
         
         .summary {
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 6px;
-            padding: 20px;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 2px solid #bae6fd;
+            border-radius: 12px;
+            padding: 32px;
         }
         
         .summary-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+        
+        .summary .metric {
+            border-left-color: #0ea5e9;
+        }
+        
+        footer {
+            background: #f9fafb;
+            padding: 24px 40px;
+            text-align: center;
+            font-size: 13px;
+            color: #6b7280;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+            
+            .container {
+                border-radius: 12px;
+            }
+            
+            header {
+                padding: 32px 24px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            .content {
+                padding: 24px;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -178,22 +253,22 @@
     <div class="container">
         <header>
             <h1>
-                BrowserDiff Report
+                🔍 BrowserDiff Report
                 <span class="status <%= report.overallStatus %>">
-                    <%= report.overallStatus.toUpperCase().replace('-', ' ') %>
+                    <%= report.overallStatus.replace('-', ' ') %>
                 </span>
             </h1>
             <div class="meta">
                 <div><strong>URL:</strong> <%= session.targetUrl %></div>
-                <div><strong>Session:</strong> <%= session.sessionId %></div>
-                <div><strong>Timestamp:</strong> <%= timestamp %></div>
+                <div><strong>Session ID:</strong> <%= session.sessionId %></div>
+                <div><strong>Generated:</strong> <%= timestamp %></div>
                 <div><strong>Viewport:</strong> <%= session.viewport.width %>x<%= session.viewport.height %></div>
             </div>
         </header>
         
         <div class="content">
             <div class="section">
-                <h2>Summary</h2>
+                <h2>📊 Summary</h2>
                 <div class="summary">
                     <div class="summary-grid">
                         <div class="metric">
@@ -206,11 +281,11 @@
                         </div>
                         <div class="metric">
                             <div class="metric-label">Overall Status</div>
-                            <div class="metric-value"><%= report.overallStatus %></div>
+                            <div class="metric-value" style="text-transform: capitalize;"><%= report.overallStatus.replace('-', ' ') %></div>
                         </div>
                         <div class="metric">
-                            <div class="metric-label">Session Status</div>
-                            <div class="metric-value"><%= session.status %></div>
+                            <div class="metric-label">Test Status</div>
+                            <div class="metric-value" style="text-transform: capitalize;"><%= session.status %></div>
                         </div>
                     </div>
                 </div>
@@ -218,24 +293,24 @@
             
             <% if (report.getAllComparisons().length > 0) { %>
             <div class="section">
-                <h2>Browser Comparisons</h2>
+                <h2>🔬 Browser Comparisons</h2>
                 <div class="comparison-grid">
                     <% report.getAllComparisons().forEach(function(comparison) { %>
                     <div class="comparison-item">
                         <div class="comparison-header">
                             <div class="browser-name"><%= comparison.browserName %></div>
                             <span class="status <%= comparison.status %>">
-                                <%= comparison.status.toUpperCase().replace('-', ' ') %>
+                                <%= comparison.status.replace('-', ' ') %>
                             </span>
                         </div>
                         
                         <div class="metrics">
                             <div class="metric">
-                                <div class="metric-label">Diff Percentage</div>
+                                <div class="metric-label">Difference</div>
                                 <div class="metric-value"><%= comparison.metrics.diffPercentage.toFixed(4) %>%</div>
                             </div>
                             <div class="metric">
-                                <div class="metric-label">Match Percentage</div>
+                                <div class="metric-label">Match</div>
                                 <div class="metric-value"><%= comparison.metrics.matchPercentage.toFixed(4) %>%</div>
                             </div>
                             <div class="metric">
@@ -254,30 +329,30 @@
             <% } %>
             
             <div class="section">
-                <h2>Browser Results</h2>
+                <h2>🌐 Browser Results</h2>
                 <div class="comparison-grid">
                     <% session.results.forEach(function(result) { %>
                     <div class="comparison-item">
                         <div class="comparison-header">
                             <div class="browser-name"><%= result.browserName %></div>
                             <span class="status <%= result.status === 'success' ? 'identical' : 'different' %>">
-                                <%= result.status.toUpperCase() %>
+                                <%= result.status %>
                             </span>
                         </div>
                         
                         <div class="metrics">
                             <div class="metric">
-                                <div class="metric-label">Version</div>
-                                <div class="metric-value"><%= result.browserVersion %></div>
+                                <div class="metric-label">Browser Version</div>
+                                <div class="metric-value" style="font-size: 16px;"><%= result.browserVersion %></div>
                             </div>
                             <div class="metric">
                                 <div class="metric-label">Page Load Time</div>
                                 <div class="metric-value"><%= result.pageLoadTime %>ms</div>
                             </div>
                             <% if (result.errorMessage) { %>
-                            <div class="metric">
-                                <div class="metric-label">Error</div>
-                                <div class="metric-value" style="color: #ef4444; font-size: 14px;"><%= result.errorMessage %></div>
+                            <div class="metric" style="grid-column: 1 / -1; border-left-color: #ef4444;">
+                                <div class="metric-label">Error Message</div>
+                                <div class="metric-value" style="color: #ef4444; font-size: 14px; font-weight: 600;"><%= result.errorMessage %></div>
                             </div>
                             <% } %>
                         </div>
@@ -286,6 +361,10 @@
                 </div>
             </div>
         </div>
+        
+        <footer>
+            Generated by <strong>BrowserDiff</strong> • Cross-browser visual regression testing
+        </footer>
     </div>
 </body>
 </html>

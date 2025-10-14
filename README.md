@@ -1,367 +1,253 @@
 # BrowserDiff
 
-> Cross-browser UI testing and visual regression tool powered by Playwright
+> Cross-browser visual regression testing made simple
 
-BrowserDiff is a command-line tool that captures screenshots of web pages across multiple browsers (Chromium, Firefox, WebKit) and performs pixel-perfect visual comparisons to detect rendering differences.
+BrowserDiff compares how websites render across different browsers (Chromium, Firefox, WebKit) and generates beautiful visual difference reports.
 
-## Features
+## ✨ Features
 
-- 🌐 **Multi-Browser Support**: Test across Chromium, Firefox, and WebKit
-- 📸 **Screenshot Capture**: Automated screenshot capture with configurable viewports
-- �️ **Full Page Screenshots**: Capture entire page height, not just viewport (NEW!)
-- 📁 **Organized Output**: Structured directory organization with timestamped folders (NEW!)
-- �🔍 **Visual Diff**: Pixel-level comparison using Pixelmatch
-- 📊 **HTML Reports**: Beautiful, interactive HTML reports with diff visualization
-- ⚙️ **Configurable**: Flexible configuration via CLI options or config file
-- 🎯 **Baseline Management**: Create and manage baseline images for regression testing
-- ⚡ **Parallel Execution**: Concurrent browser testing for faster results
-- 🔧 **TypeScript**: Fully typed for better developer experience
+- 🌐 **Multi-Browser Testing**: Compare rendering across Chromium, Firefox, and WebKit
+- 📸 **Full Page Screenshots**: Captures entire page by default with automatic page ready detection
+- 🔍 **Pixel-Perfect Comparison**: Detect even the smallest visual differences
+- 📊 **Beautiful Reports**: Clean, modern HTML reports with detailed metrics
+- 📁 **Organized Output**: Each test run in its own timestamped folder (e.g., `2025-10-14_23-13-22_413_example.com`)
+- ⚡ **Simple CLI**: Single command with sensible defaults
+- 🎯 **Flexible Options**: Control output directory, logging, quality, and more
 
-## Installation
+## 🚀 Quick Start
 
-For production use:
+```bash
+# Install globally
+npm install -g @browserdiff/cli
+
+# Test any website - full page screenshots by default!
+browserdiff https://example.com
+
+# Report will be in ./browserdiff-output/2025-10-14_HH-MM-SS_SSS_example.com/
+```
+
+## 📦 Installation
+
+### Global Installation (Recommended)
 
 ```bash
 npm install -g @browserdiff/cli
+
+# Install browser engines
+npx playwright install
 ```
 
-For local development/testing:
+### Local Development
 
 ```bash
-# Clone and setup
 git clone <repository-url>
 cd BrowserDiff
-
-# Install dependencies
 npm install
-
-# Build the project
 npm run build
 
-# Install Playwright browsers
-npx playwright install chromium
-
-# Test locally (no global install needed!)
-node dist/cli/index.js diff https://example.com --browsers chromium --verbose
-
-# Or use the test script
-./test-local.sh
+# Test locally without global install
+node dist/src/cli/index.js https://example.com
 ```
 
-Or use with npx:
+## 💡 Usage
+
+### Basic Usage
 
 ```bash
-npx @browserdiff/cli diff https://example.com
+# Compare a URL across all browsers (full page by default)
+browserdiff https://example.com
+
+# Test with specific browsers
+browserdiff https://example.com -b chromium firefox
+
+# Viewport-only screenshot (override full-page default)
+browserdiff https://example.com --viewport-only
+
+# Silent mode (no output)
+browserdiff https://example.com --silent
+
+# Open report in browser automatically
+browserdiff https://example.com --open
 ```
 
-## Quick Start
-
-### Basic Diff
-
-Compare a URL across all browsers:
+### Common Options
 
 ```bash
-browserdiff diff https://example.com
+browserdiff <url> [options]
+
+Options:
+  -b, --browsers <browsers...>  Browsers to test (default: chromium,firefox,webkit)
+  -w, --width <width>           Viewport width in pixels (default: 1920)
+  -h, --height <height>         Viewport height in pixels (default: 1080)
+  -t, --threshold <threshold>   Diff threshold 0.0-1.0 (default: 0.1)
+  -o, --output <directory>      Output directory (default: ./browserdiff-output)
+  --full-page                   Capture full page screenshots (default: true)
+  --viewport-only               Capture viewport only (overrides --full-page)
+  --max-height <pixels>         Maximum page height for full page (default: 20000)
+  --quality <quality>           Screenshot quality 0-100 (default: 90)
+  --silent                      No console output
+  --quiet                       Minimal console output
+  --verbose                     Detailed console output
+  --open                        Open report in browser after generation
+  --baseline <browser>          Baseline browser for comparison (default: chromium)
 ```
 
-### Custom Configuration
+## 📊 Reports
 
-Test with specific browsers and viewport:
+BrowserDiff generates organized HTML reports with each test run in its own folder:
+
+- **Organized Structure**: Each test in timestamped folder (e.g., `2025-10-14_23-13-22_413_example.com`)
+- **Visual Comparisons**: Side-by-side browser screenshots
+- **Difference Metrics**: Pixel count, percentage, match rate
+- **Browser Metadata**: Versions, load times
+- **Status Indicators**: Identical, within threshold, or different
+
+### Example Report Structure
+
+```
+browserdiff-output/
+├── 2025-10-14_23-13-22_413_example.com/
+│   ├── report.html                    # Beautiful HTML report
+│   ├── report.json                    # Raw JSON data
+│   ├── screenshots/
+│   │   ├── chromium-{timestamp}.png
+│   │   ├── firefox-{timestamp}.png
+│   │   └── webkit-{timestamp}.png
+│   └── diffs/
+│       ├── diff-chromium-vs-firefox.png
+│       └── diff-chromium-vs-webkit.png
+└── 2025-10-14_23-15-48_892_another-site.com/
+    └── ...
+```
+
+## 🎯 Use Cases
+
+### Visual Regression Testing
 
 ```bash
-browserdiff diff https://example.com \
-  --browsers chromium firefox \
-  --width 1920 \
-  --height 1080 \
-  --threshold 0.1
+# Test before and after changes
+browserdiff https://staging.example.com
+# Make changes...
+browserdiff https://staging.example.com
+# Compare reports in different timestamped folders
 ```
 
-### Initialize Configuration
-
-Create a `.browserdiff.json` configuration file:
+### Cross-Browser Compatibility
 
 ```bash
-browserdiff config init
+# Test new feature across browsers
+browserdiff https://example.com/new-feature -b chromium firefox webkit --verbose
 ```
 
-Example configuration:
-
-```json
-{
-  "browsers": ["chromium", "firefox", "webkit"],
-  "viewport": {
-    "width": 1920,
-    "height": 1080,
-    "deviceScaleFactor": 1
-  },
-  "comparison": {
-    "threshold": 0.1,
-    "includeAA": true
-  },
-  "output": {
-    "directory": "./browserdiff-output",
-    "format": "html",
-    "embedAssets": true
-  },
-  "timeout": {
-    "pageLoad": 30000,
-    "screenshot": 10000
-  },
-  "retry": {
-    "attempts": 3,
-    "delay": 1000
-  },
-  "parallel": 3,
-  "screenshot": {
-    "fullPage": false,
-    "maxHeight": 20000,
-    "timeout": 60000,
-    "quality": 90
-  },
-  "reporting": {
-    "structuredOutput": false,
-    "directoryPattern": "YYYY-MM-DD_HH-mm-ss_SSS_{url}",
-    "urlMaxLength": 100
-  }
-}
-```
-
-## Commands
-
-### `diff`
-
-Compare a URL across multiple browsers:
+### Responsive Design Testing
 
 ```bash
-browserdiff diff <url> [options]
+# Test different viewport sizes
+browserdiff https://example.com -w 375 -h 667   # Mobile
+browserdiff https://example.com -w 768 -h 1024  # Tablet
+browserdiff https://example.com -w 1920 -h 1080 # Desktop
 ```
 
-**Options:**
-- `-b, --browsers <browsers...>` - Browsers to test (chromium, firefox, webkit)
-- `-w, --width <width>` - Viewport width (default: 1920)
-- `-h, --height <height>` - Viewport height (default: 1080)
-- `-t, --threshold <threshold>` - Diff threshold 0.0-1.0 (default: 0.1)
-- `-o, --output <directory>` - Output directory (default: ./browserdiff-output)
-- `-c, --config <path>` - Config file path
-- `--baseline <browser>` - Baseline browser (default: chromium)
-- `--ignore-https-errors` - Ignore HTTPS certificate errors
-- `--open` - Open report after generation
-- `--verbose` - Verbose output
-
-**Screenshot Options (NEW):**
-- `--full-page` - Capture full page height instead of viewport only
-- `--max-height <pixels>` - Maximum page height for full page screenshots (default: 20000)
-- `--screenshot-timeout <ms>` - Screenshot capture timeout in milliseconds (default: 60000)
-- `--screenshot-quality <quality>` - PNG compression quality 0-100 (default: 90)
-
-**Output Organization Options (NEW):**
-- `--structured-output` - Create organized directory structure with timestamps
-- `--directory-pattern <pattern>` - Directory naming pattern (default: YYYY-MM-DD_HH-mm-ss_SSS_{url})
-- `--url-max-length <chars>` - Maximum URL length in folder names (default: 100)
-
-**Example:**
+### Full Page Capture
 
 ```bash
-browserdiff diff https://example.com \
-  --browsers chromium firefox webkit \
-  --width 1920 --height 1080 \
-  --threshold 0.05 \
-  --open
+# Full page is the default! Just run:
+browserdiff https://example.com/long-page
 
-# Test site with invalid SSL certificate
-browserdiff diff https://example.com \
-  --ignore-https-errors \
-  --verbose
+# For very long pages, increase max-height:
+browserdiff https://example.com/long-page --max-height 50000
 
-# NEW: Capture full page screenshots
-browserdiff diff https://example.com \
-  --full-page \
-  --max-height 15000
-
-# NEW: Use structured output organization
-browserdiff diff https://example.com \
-  --structured-output
-
-# NEW: Combined features - full page + structured output
-browserdiff diff https://example.com \
-  --full-page \
-  --structured-output \
-  --max-height 20000 \
-  --screenshot-quality 95
+# To capture viewport only instead:
+browserdiff https://example.com --viewport-only
 ```
 
-### `config`
+## 🔧 Advanced Usage
 
-Manage configuration:
+### Custom Threshold
 
 ```bash
-# Initialize new config
-browserdiff config init
+# Stricter comparison (0.01 = 1% tolerance)
+browserdiff https://example.com -t 0.01
 
-# Show current config
-browserdiff config show
-
-# Validate config
-browserdiff config validate
+# More lenient (0.5 = 50% tolerance)
+browserdiff https://example.com -t 0.5
 ```
 
-### `baseline`
-
-Manage baseline images:
+### Custom Output Directory
 
 ```bash
-# Create baseline
-browserdiff baseline create https://example.com \
-  --browser chromium \
-  --width 1920 --height 1080
+# Save to specific directory
+browserdiff https://example.com -o ./test-results
 
-# List baselines
-browserdiff baseline list
-
-# Update baseline
-browserdiff baseline update <baseline-id>
+# Integrate with CI/CD
+browserdiff https://example.com -o ./artifacts/browserdiff
 ```
 
-### `report`
-
-Manage reports:
+### Automation & CI/CD
 
 ```bash
-# View report
-browserdiff report view ./browserdiff-output/report-<session-id>.html
+# Silent mode for CI pipelines
+browserdiff https://example.com --silent
+EXIT_CODE=$?
 
-# List reports
-browserdiff report list
+# Exit code 0 = no differences or within threshold
+# Exit code 1 = differences detected beyond threshold
 ```
 
-## Configuration
+## 🏗️ Architecture
 
-### Config File
+### Core Components
 
-BrowserDiff looks for `.browserdiff.json` in the current directory. You can specify a custom path with `--config`.
+- **CLI**: Simple command-line interface (single command!)
+- **Executor**: Orchestrates browser testing workflow
+- **BrowserService**: Manages Playwright browser instances
+- **ScreenshotService**: Captures screenshots with page ready detection
+- **DiffService**: Performs pixel-perfect comparisons using Pixelmatch
+- **ReportService**: Generates beautiful HTML reports from EJS templates
 
-#### Screenshot Configuration (NEW)
+### Page Readiness Detection
 
-Control screenshot capture behavior:
+BrowserDiff waits for pages to be fully loaded before capturing:
 
-- `fullPage` (boolean): Capture full page height instead of viewport only (default: false)
-- `maxHeight` (number): Maximum page height for full page screenshots in pixels (default: 20000, range: 1000-50000)
-- `timeout` (number): Screenshot capture timeout in milliseconds (default: 60000, range: 10000-300000)
-- `quality` (number): PNG compression quality 0-100 (default: 90, range: 0-100)
+- ✅ All images loaded (`img.complete`)
+- ✅ Web fonts ready (`document.fonts.ready`)
+- ✅ Network idle (no pending requests)
+- ✅ Configurable delay (default: 500ms)
 
-#### Reporting Configuration (NEW)
+This ensures consistent, reliable screenshots every time.
 
-Organize test output in structured directories:
+## 📚 Examples
 
-- `structuredOutput` (boolean): Create organized directory structure with timestamps (default: false)
-- `directoryPattern` (string): Directory naming pattern with timestamp tokens and {url} placeholder (default: "YYYY-MM-DD_HH-mm-ss_SSS_{url}")
-- `urlMaxLength` (number): Maximum URL length in folder names (default: 100, range: 10-255)
-
-**Timestamp Pattern Tokens:**
-- `YYYY` - 4-digit year
-- `MM` - 2-digit month
-- `DD` - 2-digit day
-- `HH` - 2-digit hour (24-hour format)
-- `mm` - 2-digit minute
-- `ss` - 2-digit second
-- `SSS` - 3-digit millisecond
-- `{url}` - Sanitized URL
-
-**Example Directory Names:**
-- `2025-01-12_14-30-45_123_example-com`
-- `YYYY-MM-DD_{url}` → `2025-01-12_example-com`
-
-### Environment Variables
-
-- `BROWSERDIFF_CONFIG` - Path to configuration file
-- `BROWSERDIFF_OUTPUT` - Default output directory
-
-## Exit Codes
-
-- `0` - Success (no differences or within threshold)
-- `1` - Failure (differences beyond threshold or error)
-
-## Examples
-
-### Responsive Testing
-
-Test multiple viewports:
+### Compare Production vs Staging
 
 ```bash
-# Desktop
-browserdiff diff https://example.com --width 1920 --height 1080
+# Production
+browserdiff https://example.com -o ./reports/prod
 
-# Tablet
-browserdiff diff https://example.com --width 768 --height 1024
+# Staging
+browserdiff https://staging.example.com -o ./reports/staging
 
-# Mobile
-browserdiff diff https://example.com --width 375 --height 667
+# Compare reports manually
 ```
 
-### Full Page Screenshot Testing (NEW)
-
-Capture and compare entire page heights:
+### Test Multiple Pages
 
 ```bash
-# Basic full page capture
-browserdiff diff https://example.com --full-page
+#!/bin/bash
+PAGES=(
+  "https://example.com"
+  "https://example.com/about"
+  "https://example.com/contact"
+  "https://example.com/products"
+)
 
-# Full page with custom max height
-browserdiff diff https://example.com \
-  --full-page \
-  --max-height 15000
-
-# Full page with quality optimization
-browserdiff diff https://example.com \
-  --full-page \
-  --screenshot-quality 95 \
-  --screenshot-timeout 120000
+for PAGE in "${PAGES[@]}"; do
+  echo "Testing $PAGE..."
+  browserdiff "$PAGE" --quiet
+done
 ```
 
-### Structured Output Organization (NEW)
-
-Organize test results in timestamped directories:
-
-```bash
-# Enable structured output
-browserdiff diff https://example.com --structured-output
-
-# Custom directory pattern (timestamp only)
-browserdiff diff https://example.com \
-  --structured-output \
-  --directory-pattern "YYYY-MM-DD_HH-mm-ss"
-
-# Custom pattern with URL
-browserdiff diff https://example.com \
-  --structured-output \
-  --directory-pattern "{url}_YYYY-MM-DD" \
-  --url-max-length 50
-```
-
-### Combined Features (NEW)
-
-Full page screenshots with structured output:
-
-```bash
-# Long-scrolling page testing with organization
-browserdiff diff https://example.com/long-page \
-  --full-page \
-  --structured-output \
-  --max-height 25000 \
-  --screenshot-quality 90
-
-# Multi-browser full page test with custom naming
-browserdiff diff https://example.com \
-  --browsers chromium firefox webkit \
-  --full-page \
-  --structured-output \
-  --directory-pattern "test_{url}_YYYY-MM-DD_HH-mm" \
-  --max-height 20000
-```
-
-### CI/CD Integration
-
-GitHub Actions example:
+### CI/CD Integration (GitHub Actions)
 
 ```yaml
 name: Visual Regression Tests
@@ -369,7 +255,7 @@ name: Visual Regression Tests
 on: [push, pull_request]
 
 jobs:
-  test:
+  browserdiff:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -380,67 +266,28 @@ jobs:
           node-version: '18'
       
       - name: Install BrowserDiff
-        run: npm install -g @browserdiff/cli
+        run: |
+          npm install -g @browserdiff/cli
+          npx playwright install --with-deps
       
       - name: Run Visual Tests
         run: |
-          browserdiff diff https://example.com \
-            --browsers chromium firefox \
-            --threshold 0.05
+          browserdiff https://your-app.com --silent -o ./artifacts
       
-      - name: Upload Report
-        if: always()
+      - name: Upload Reports
         uses: actions/upload-artifact@v3
+        if: always()
         with:
-          name: browserdiff-report
-          path: browserdiff-output/
+          name: browserdiff-reports
+          path: ./artifacts/
 ```
 
-## API Usage
-
-You can also use BrowserDiff programmatically:
-
-```typescript
-import { Executor, Logger, DEFAULT_CONFIG } from '@browserdiff/cli';
-
-const config = {
-  ...DEFAULT_CONFIG,
-  browsers: ['chromium', 'firefox'],
-  viewport: { width: 1920, height: 1080 },
-};
-
-const logger = new Logger(true);
-const executor = new Executor(config, logger);
-
-try {
-  const result = await executor.execute('https://example.com', 'chromium');
-  console.log('Report generated:', result.reportPath);
-  console.log('Success:', result.success);
-} catch (error) {
-  console.error('Test failed:', error);
-}
-```
-
-## Architecture
-
-```
-src/
-├── cli/              # CLI commands and interface
-│   ├── commands/     # Individual commands
-│   └── validation.ts # Input validation
-├── models/           # Data models
-├── services/         # Core services
-├── core/             # Execution logic
-├── utils/            # Utilities
-└── templates/        # Report templates
-```
-
-## Development
+## 🛠️ Development
 
 ```bash
 # Clone repository
-git clone https://github.com/your-org/browserdiff.git
-cd browserdiff
+git clone <repository-url>
+cd BrowserDiff
 
 # Install dependencies
 npm install
@@ -451,68 +298,27 @@ npm run build
 # Run tests
 npm test
 
-# Run with coverage
-npm run test:coverage
-
 # Lint
 npm run lint
 
-# Format
+# Format code
 npm run format
 ```
 
-## Troubleshooting
+## 📝 Requirements
 
-### WebKit Dependencies on Linux
+- Node.js >= 18.0.0
+- npm or yarn
+- Playwright browsers (auto-installed with `npx playwright install`)
 
-If you see errors about missing WebKit dependencies (especially on Arch Linux or rolling-release distributions):
+## 🤝 Contributing
 
-```
-⚠️  Skipping comparison with webkit: browserType.launch: 
-Missing libraries: libicudata.so.66, libicui18n.so.66...
-```
+Contributions welcome! Please feel free to submit a Pull Request.
 
-**Quick Solution**: Use Chromium and Firefox only:
-```bash
-browserdiff diff https://example.com --browsers chromium firefox
-```
+## 📄 License
 
-**Full Solution**: See [WEBKIT_DEPENDENCIES.md](WEBKIT_DEPENDENCIES.md) for detailed instructions on:
-- Installing ICU 66 from AUR (Arch Linux)
-- Using Docker for guaranteed compatibility
-- Understanding the ICU version mismatch issue
+MIT
 
-Chromium and Firefox provide excellent cross-browser coverage. WebKit is primarily needed for Safari-specific testing.
+---
 
-### HTTPS Certificate Errors
-
-If testing sites with invalid SSL certificates:
-
-```bash
-browserdiff diff https://example.com --ignore-https-errors
-```
-
-### Permission Errors with npm link
-
-See [LOCAL_TESTING.md](LOCAL_TESTING.md) for alternative testing methods without global installation.
-
-## Contributing
-
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details.
-
-## License
-
-MIT © [Your Organization]
-
-## Acknowledgments
-
-- [Playwright](https://playwright.dev/) - Browser automation
-- [Pixelmatch](https://github.com/mapbox/pixelmatch) - Image comparison
-- [Commander.js](https://github.com/tj/commander.js) - CLI framework
-- [EJS](https://ejs.co/) - Report templating
-
-## Support
-
-- 📚 [Documentation](https://browserdiff.dev/docs)
-- 💬 [Discussions](https://github.com/your-org/browserdiff/discussions)
-- 🐛 [Issues](https://github.com/your-org/browserdiff/issues)
+**Made with ❤️ for cross-browser testing**
