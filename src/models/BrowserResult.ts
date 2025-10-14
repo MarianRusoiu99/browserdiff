@@ -9,6 +9,9 @@ export interface BrowserMetadata {
   additionalFlags: string[];
 }
 
+// Import ScreenshotResult for enhanced screenshot metadata
+import { ScreenshotResult } from './screenshot-result';
+
 export class BrowserResult {
   public browserName: string;
   public browserVersion: string;
@@ -19,6 +22,8 @@ export class BrowserResult {
   public errorMessage: string | null;
   public status: BrowserStatus;
   public metadata: BrowserMetadata;
+  // NEW: Enhanced screenshot metadata
+  public screenshot?: ScreenshotResult;
 
   constructor(
     browserName: string,
@@ -39,6 +44,12 @@ export class BrowserResult {
   public setScreenshot(path: string, data: Buffer | null = null): void {
     this.screenshotPath = path;
     this.screenshotData = data;
+  }
+
+  // NEW: Set enhanced screenshot result with full page metadata
+  public setScreenshotResult(screenshotResult: ScreenshotResult): void {
+    this.screenshot = screenshotResult;
+    this.screenshotPath = screenshotResult.filePath;
   }
 
   public setPageLoadTime(time: number): void {
@@ -64,6 +75,9 @@ export class BrowserResult {
       errorMessage: this.errorMessage,
       status: this.status,
       metadata: this.metadata,
+      // NEW: Include screenshot metadata in JSON output
+      screenshot: this.screenshot,
     };
   }
 }
+

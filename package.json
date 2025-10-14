@@ -2,14 +2,14 @@
   "name": "@browserdiff/cli",
   "version": "1.0.0",
   "description": "Cross-browser UI diff CLI tool for visual regression testing",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "bin": {
-    "browserdiff": "./dist/cli/index.js"
+    "browserdiff": "./dist/src/cli/index.js"
   },
   "scripts": {
     "build": "tsc && npm run copy:templates",
-    "copy:templates": "mkdir -p dist/templates && cp src/templates/*.ejs dist/templates/",
+    "copy:templates": "mkdir -p dist/templates dist/src/templates && cp src/templates/*.ejs dist/templates/ && cp src/templates/*.ejs dist/src/templates/",
     "dev": "tsc --watch",
     "test": "jest",
     "test:watch": "jest --watch",

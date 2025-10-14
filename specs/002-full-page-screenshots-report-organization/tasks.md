@@ -48,12 +48,12 @@
 
 ## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
 **CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
-- [ ] T004 [P] Contract test CLI interface extensions in tests/contract/test_cli_interface_extensions.test.ts
-- [ ] T005 [P] Contract test ScreenshotConfig model in tests/contract/test_screenshot_config.test.ts
-- [ ] T006 [P] Contract test ReportConfig model in tests/contract/test_report_config.test.ts
-- [ ] T007 [P] Integration test full page screenshots in tests/integration/test_full_page_screenshots.test.ts
-- [ ] T008 [P] Integration test structured output in tests/integration/test_structured_output.test.ts
-- [ ] T009 [P] Integration test combined features in tests/integration/test_combined_features.test.ts
+- [x] T004 [P] Contract test CLI interface extensions in tests/contract/test_cli_interface_extensions.test.ts
+- [x] T005 [P] Contract test ScreenshotConfig model in tests/contract/test_screenshot_config.test.ts
+- [x] T006 [P] Contract test ReportConfig model in tests/contract/test_report_config.test.ts
+- [x] T007 [P] Integration test full page screenshots in tests/integration/test_full_page_screenshots.test.ts
+- [x] T008 [P] Integration test structured output in tests/integration/test_structured_output.test.ts
+- [x] T009 [P] Integration test combined features in tests/integration/test_combined_features.test.ts
 
 ## Phase 3.3: Core Implementation (ONLY after tests are failing)
 - [x] T010 [P] ScreenshotConfig interface in src/models/screenshot-config.ts
@@ -65,24 +65,24 @@
 - [x] T016 [P] Enhanced TestConfig interface in src/models/test-config.ts
 - [x] T017 [P] URL sanitization utility in src/utils/url-sanitization.ts
 - [x] T018 [P] Directory management utility in src/utils/directory-utils.ts
-- [ ] T019 Extend ScreenshotService with full page capture in src/services/screenshot-service.ts
-- [ ] T020 Extend ReportService with structured output in src/services/report-service.ts
-- [ ] T021 [P] DirectoryService implementation in src/services/directory-service.ts
-- [ ] T022 Extend CLI diff command with new options in src/cli/diff-command.ts
-- [ ] T023 Update configuration parsing in src/services/config-service.ts
+- [x] T019 Extend ScreenshotService with full page capture in src/services/screenshot-service.ts
+- [x] T020 Extend ReportService with structured output in src/services/report-service.ts
+- [x] T021 [P] DirectoryService implementation in src/services/directory-service.ts
+- [x] T022 Extend CLI diff command with new options in src/cli/diff-command.ts
+- [x] T023 Update configuration parsing in src/services/config-service.ts
 
 ## Phase 3.4: Integration
-- [ ] T024 Connect DirectoryService to filesystem operations
-- [ ] T025 URL sanitization integration
-- [ ] T026 Error handling and logging for new features
+- [x] T024 Connect DirectoryService to filesystem operations
+- [x] T025 URL sanitization integration
+- [x] T026 Error handling and logging for new features
 
 ## Phase 3.5: Polish
-- [ ] T027 [P] Unit tests for URL sanitization in tests/unit/test_url_sanitization.test.ts
-- [ ] T028 [P] Unit tests for directory utilities in tests/unit/test_directory_utils.test.ts
-- [ ] T029 Performance tests for full page screenshots (<2x viewport time)
-- [ ] T030 [P] Update README.md with new features
-- [ ] T031 Remove code duplication
-- [ ] T032 Run quickstart.md validation steps
+- [x] T027 [P] Unit tests for URL sanitization in tests/unit/test_url_sanitization.test.ts
+- [x] T028 [P] Unit tests for directory utilities in tests/unit/test_directory_utils.test.ts
+- [x] T029 Performance tests for full page screenshots (<2x viewport time)
+- [x] T030 [P] Update README.md with new features
+- [x] T031 Remove code duplication
+- [x] T032 Run quickstart.md validation steps
 
 ## Dependencies
 - Tests (T004-T009) before implementation (T010-T023)

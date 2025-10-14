@@ -107,10 +107,35 @@ export function validateConfig(config: Partial<TestConfig>): string[] {
     }
   }
 
+  // NEW: Validate screenshot configuration
+  if (config.screenshot) {
+    if (config.screenshot.maxHeight < 1000 || config.screenshot.maxHeight > 50000) {
+      errors.push('Screenshot maxHeight must be between 1000 and 50000 pixels');
+    }
+    if (config.screenshot.timeout < 10000 || config.screenshot.timeout > 300000) {
+      errors.push('Screenshot timeout must be between 10000 and 300000 milliseconds');
+    }
+    if (config.screenshot.quality < 0 || config.screenshot.quality > 100) {
+      errors.push('Screenshot quality must be between 0 and 100');
+    }
+  }
+
+  // NEW: Validate reporting configuration
+  if (config.reporting) {
+    if (config.reporting.urlSanitization) {
+      if (config.reporting.urlSanitization.maxLength < 10 || config.reporting.urlSanitization.maxLength > 255) {
+        errors.push('URL sanitization maxLength must be between 10 and 255');
+      }
+    }
+  }
+
   return errors;
 }
 
 export function mergeConfig(base: TestConfig, override: Partial<TestConfig>): TestConfig {
+  const baseReporting = base.reporting || DEFAULT_REPORT_CONFIG;
+  const baseScreenshot = base.screenshot || DEFAULT_SCREENSHOT_CONFIG;
+
   return {
     ...base,
     ...override,
@@ -119,5 +144,16 @@ export function mergeConfig(base: TestConfig, override: Partial<TestConfig>): Te
     output: { ...base.output, ...override.output },
     timeout: { ...base.timeout, ...override.timeout },
     retry: { ...base.retry, ...override.retry },
+    // NEW: Merge screenshot and reporting configurations
+    screenshot: override.screenshot ? { ...baseScreenshot, ...override.screenshot } : baseScreenshot,
+    reporting: override.reporting ? {
+      structured: override.reporting.structured !== undefined ? override.reporting.structured : baseReporting.structured,
+      directoryPattern: override.reporting.directoryPattern || baseReporting.directoryPattern,
+      urlSanitization: override.reporting.urlSanitization ? {
+        ...baseReporting.urlSanitization,
+        ...override.reporting.urlSanitization
+      } : baseReporting.urlSanitization
+    } : baseReporting,
   };
 }
+

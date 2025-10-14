@@ -35,6 +35,9 @@ export class ScreenshotService {
 
     legacyResult.setScreenshot(result.filePath);
     legacyResult.setPageLoadTime(result.captureTime);
+    
+    // NEW: Set the enhanced screenshot result
+    legacyResult.setScreenshotResult(result);
 
     if (result.wasTruncated) {
       legacyResult.setError(`Screenshot truncated: ${result.truncationReason}`);

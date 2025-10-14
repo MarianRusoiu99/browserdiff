@@ -1,12 +1,8 @@
 import { Command } from 'commander';
 import { ConfigService } from '../../services/ConfigService';
-import { BrowserService } from '../../services/BrowserService';
-import { ScreenshotService } from '../../services/ScreenshotService';
-import { DiffService } from '../../services/DiffService';
-import { ReportService } from '../../services/ReportService';
-import { TestSession } from '../../models/TestSession';
-import { BrowserResult } from '../../models/BrowserResult';
-import * as path from 'path';
+import { Executor } from '../../core/Executor';
+import { Logger } from '../../utils/Logger';
+import { DEFAULT_URL_SANITIZATION_CONFIG } from '../../models/url-sanitization-config';
 
 export const diffCommand = new Command('diff')
   .description('Compare a URL across multiple browsers')
@@ -21,6 +17,15 @@ export const diffCommand = new Command('diff')
   .option('--ignore-https-errors', 'Ignore HTTPS certificate errors', false)
   .option('--open', 'Open report after generation', false)
   .option('--verbose', 'Verbose output', false)
+  // NEW: Full Page Screenshot Options
+  .option('--full-page', 'Capture full page screenshots (default: false)', false)
+  .option('--max-height <pixels>', 'Maximum page height for full page screenshots', '20000')
+  .option('--screenshot-timeout <ms>', 'Screenshot capture timeout in milliseconds', '60000')
+  .option('--screenshot-quality <quality>', 'PNG compression quality (0-100)', '90')
+  // NEW: Structured Output Options
+  .option('--structured-output', 'Create organized directory structure (default: false)', false)
+  .option('--directory-pattern <pattern>', 'Directory naming pattern', 'YYYY-MM-DD_HH-mm-ss_SSS_{url}')
+  .option('--url-max-length <chars>', 'Maximum URL length in folder names', '100')
   .action(async (url: string, options: DiffCommandOptions) => {
     try {
       // Load configuration
@@ -60,135 +65,57 @@ export const diffCommand = new Command('diff')
         };
       }
 
-      // Initialize services
-      const browserService = new BrowserService(config);
-      const screenshotService = new ScreenshotService(config);
-      const diffService = new DiffService(config);
-      const reportService = new ReportService(config);
+      // NEW: Apply screenshot configuration from CLI options
+      if (options.fullPage !== undefined || options.maxHeight || options.screenshotTimeout || options.screenshotQuality) {
+        config = {
+          ...config,
+          screenshot: {
+            ...config.screenshot,
+            fullPage: options.fullPage,
+            maxHeight: options.maxHeight ? parseInt(options.maxHeight, 10) : config.screenshot?.maxHeight || 20000,
+            timeout: options.screenshotTimeout ? parseInt(options.screenshotTimeout, 10) : config.screenshot?.timeout || 60000,
+            quality: options.screenshotQuality ? parseInt(options.screenshotQuality, 10) : config.screenshot?.quality || 90,
+          },
+        };
+      }
 
-      // Create test session
-      const session = new TestSession(url, config);
+      // NEW: Apply reporting configuration from CLI options
+      if (options.structuredOutput !== undefined || options.directoryPattern || options.urlMaxLength) {
+        const baseUrlSanitization = config.reporting?.urlSanitization || DEFAULT_URL_SANITIZATION_CONFIG;
+        config = {
+          ...config,
+          reporting: {
+            ...config.reporting,
+            structured: options.structuredOutput,
+            directoryPattern: options.directoryPattern || config.reporting?.directoryPattern || 'YYYY-MM-DD_HH-mm-ss_SSS_{url}',
+            urlSanitization: {
+              ...baseUrlSanitization,
+              maxLength: options.urlMaxLength ? parseInt(options.urlMaxLength, 10) : baseUrlSanitization.maxLength,
+            },
+          },
+        };
+      }
+
+      // Initialize Executor with logger for verbose output
+      const logger = new Logger(options.verbose);
+      const executor = new Executor(config, logger);
+
+      // Execute the test
+      const result = await executor.execute(url, options.baseline);
 
       if (options.verbose) {
         // eslint-disable-next-line no-console
-        console.log(`Starting cross-browser test for: ${url}`);
-        // eslint-disable-next-line no-console
-        console.log(`Browsers: ${config.browsers.join(', ')}`);
-        // eslint-disable-next-line no-console
-        console.log(`Viewport: ${config.viewport.width}x${config.viewport.height}`);
+        console.log(`\n✓ Report generated: ${result.reportPath}`);
       }
-
-      // Capture screenshots for all browsers
-      const screenshotDir = path.join(config.output.directory, 'screenshots');
-      const results = [];
-
-      for (const browserName of config.browsers) {
-        if (options.verbose) {
-          // eslint-disable-next-line no-console
-          console.log(`\nLaunching ${browserName}...`);
-        }
-
-        try {
-          const page = await browserService.createPage(browserName, options.ignoreHttpsErrors);
-          await browserService.navigateWithRetry(page, url);
-
-          if (options.verbose) {
-            // eslint-disable-next-line no-console
-            console.log(`Capturing screenshot for ${browserName}...`);
-          }
-
-          const result = await screenshotService.captureScreenshot(
-            page,
-            browserName,
-            screenshotDir
-          );
-
-          session.addResult(result);
-          results.push(result);
-
-          if (options.verbose) {
-            // eslint-disable-next-line no-console
-            console.log(
-              `✓ ${browserName}: ${result.status} (${result.pageLoadTime}ms)`
-            );
-          }
-        } catch (error) {
-          // Create a failed result for the browser
-          const failedResult = new BrowserResult(browserName, 'unknown', {
-            userAgent: 'unknown',
-            platform: 'unknown',
-            architecture: 'unknown',
-            headless: true,
-            viewport: config.viewport,
-            additionalFlags: [],
-          });
-          failedResult.setError((error as Error).message);
-          
-          session.addResult(failedResult);
-          results.push(failedResult);
-
-          if (options.verbose) {
-            // eslint-disable-next-line no-console
-            console.error(`✗ ${browserName}: ${(error as Error).message}`);
-          }
-        }
-      }
-
-      // Close all browsers
-      await browserService.closeAllBrowsers();
-
-      // Find baseline result
-      const baselineResult = results.find(
-        (r) => r.browserName === options.baseline
-      );
-      if (!baselineResult) {
-        throw new Error(`Baseline browser ${options.baseline} not found`);
-      }
-      
-      if (baselineResult.status !== 'success') {
-        throw new Error(
-          `Baseline browser ${options.baseline} failed: ${baselineResult.errorMessage || 'Unknown error'}`
-        );
-      }
-
-      // Generate difference report
-      if (options.verbose) {
-        // eslint-disable-next-line no-console
-        console.log('\nGenerating difference report...');
-      }
-
-      const diffReport = await diffService.generateDifferenceReport(
-        session.sessionId,
-        options.baseline,
-        baselineResult,
-        results,
-        config.output.directory
-      );
-
-      session.complete();
-
-      // Generate HTML report
-      const reportPath = await reportService.generateHTMLReport(
-        session,
-        diffReport
-      );
-
-      if (options.verbose) {
-        // eslint-disable-next-line no-console
-        console.log(`\n✓ Report generated: ${reportPath}`);
-      }
-
-      // Save JSON data
-      await reportService.saveReportData(session, diffReport);
 
       // Open report if requested
       if (options.open) {
-        await reportService.openReport(reportPath);
+        await executor.openReport(result.reportPath);
       }
 
       // Exit with appropriate code
-      if (diffReport.hasDifferences()) {
-        if (diffReport.overallStatus === 'different') {
+      if (result.report.hasDifferences()) {
+        if (result.report.overallStatus === 'different') {
           // eslint-disable-next-line no-console
           console.log(
             '\n⚠️  Differences detected beyond threshold'
@@ -228,4 +155,14 @@ interface DiffCommandOptions {
   ignoreHttpsErrors: boolean;
   open: boolean;
   verbose: boolean;
+  // NEW: Screenshot options
+  fullPage: boolean;
+  maxHeight: string;
+  screenshotTimeout: string;
+  screenshotQuality: string;
+  // NEW: Structured output options
+  structuredOutput: boolean;
+  directoryPattern: string;
+  urlMaxLength: string;
 }
+
