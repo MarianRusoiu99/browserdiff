@@ -1,18 +1,22 @@
 /**
- * Configuration for screenshot capture behavior
+ * Configuration interface for screenshot capture behavior.
+ * 
+ * @property fullPage - Whether to capture full page screenshot (true) or viewport only (false)
+ * @property maxHeight - Maximum height for full page screenshots (in pixels)
+ * @property timeout - Maximum time to wait for page load (in milliseconds)
+ * @property quality - Image quality for compression (0-100)
+ * @property delayBeforeCapture - Delay before capturing screenshot (in milliseconds, default: 500)
+ * @property waitForImages - Whether to wait for images to load before capturing (default: true)
+ * @property waitForFonts - Whether to wait for fonts to load before capturing (default: true)
  */
 export interface ScreenshotConfig {
-  /** Enable full page screenshot capture */
   fullPage: boolean;
-
-  /** Maximum page height for full page screenshots (default: 20000px) */
   maxHeight: number;
-
-  /** Timeout for screenshot capture in milliseconds (default: 60000) */
   timeout: number;
-
-  /** Quality setting for PNG compression (0-100, default: 90) */
   quality: number;
+  delayBeforeCapture?: number;
+  waitForImages?: boolean;
+  waitForFonts?: boolean;
 }
 
 /**
@@ -23,7 +27,10 @@ export const DEFAULT_SCREENSHOT_CONFIG: ScreenshotConfig = {
   fullPage: false,           // Maintains backward compatibility
   maxHeight: 20000,          // Covers 99% of real-world pages
   timeout: 60000,            // 60 seconds for complex pages
-  quality: 90                // High quality with reasonable file size
+  quality: 90,               // High quality with reasonable file size
+  delayBeforeCapture: 500,   // 500ms delay to let page settle
+  waitForImages: true,       // Ensure images are loaded
+  waitForFonts: true         // Ensure fonts are loaded
 };
 
 /**

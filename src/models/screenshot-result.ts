@@ -1,12 +1,11 @@
 /**
  * Enhanced ScreenshotResult interface for full page screenshot metadata
+ * Uses string for browser identifier to maintain type safety without tight coupling to Playwright types
  */
-
-import { BrowserType } from 'playwright';
 
 export interface ScreenshotResult {
   // Existing properties (preserved for compatibility)
-  browser: BrowserType;
+  browser: string;
   filePath: string;
   width: number;
   height: number;
@@ -23,7 +22,7 @@ export interface ScreenshotResult {
  * Factory function to create a ScreenshotResult instance
  */
 export function createScreenshotResult(
-  browser: BrowserType,
+  browser: string,
   filePath: string,
   width: number,
   height: number,

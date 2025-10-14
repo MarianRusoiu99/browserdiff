@@ -50,4 +50,5 @@ test-results/
 
 # Results
 browserdiff-results/
+browserdiff-output/
 dist/

@@ -16,13 +16,9 @@ export { ConfigService } from './services/ConfigService';
 
 // Core
 export { Executor, ExecutionResult } from './core/Executor';
-export { ParallelExecutor } from './core/ParallelExecutor';
 
 // Utils
 export { Logger, LogLevel } from './utils/Logger';
-export { FileSystem } from './utils/FileSystem';
-export { ErrorHandler } from './utils/ErrorHandler';
-export { Performance } from './utils/Performance';
 
 // CLI Validation
 export { ValidationError } from './cli/validation';

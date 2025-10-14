@@ -1,5 +1,4 @@
 import { describe, it, expect } from '@jest/globals';
-import { BrowserType } from 'playwright';
 import { ScreenshotResult, createScreenshotResult, SCREENSHOT_RESULT_VALIDATION } from '../../src/models/screenshot-result';
 
 describe('ScreenshotResult Model', () => {
@@ -12,7 +11,7 @@ describe('ScreenshotResult Model', () => {
 
     it('should define ScreenshotResult with required properties', () => {
       const result: ScreenshotResult = {
-        browser: 'chromium' as unknown as BrowserType,
+        browser: 'chromium',
         filePath: '/test/screenshot.png',
         width: 1920,
         height: 1080,
@@ -35,7 +34,7 @@ describe('ScreenshotResult Model', () => {
 
     it('should support full page screenshot metadata', () => {
       const result: ScreenshotResult = {
-        browser: 'firefox' as unknown as BrowserType,
+        browser: 'firefox',
         filePath: '/test/fullpage.png',
         width: 1920,
         height: 5000,
@@ -56,7 +55,7 @@ describe('ScreenshotResult Model', () => {
   describe('Factory Function', () => {
     it('should create ScreenshotResult with createScreenshotResult', () => {
       const result = createScreenshotResult(
-        'webkit' as unknown as BrowserType,
+        'webkit',
         '/test/screenshot.png',
         1920,
         1080,
@@ -81,7 +80,7 @@ describe('ScreenshotResult Model', () => {
 
     it('should provide default values for optional properties', () => {
       const result = createScreenshotResult(
-        'chromium' as unknown as BrowserType,
+        'chromium',
         '/test/screenshot.png',
         1920,
         1080

@@ -5,13 +5,29 @@ import { TestConfig } from '../models/Config';
 import { BrowserResult, BrowserMetadata } from '../models/BrowserResult';
 import { ScreenshotResult, createScreenshotResult } from '../models/screenshot-result';
 import { ScreenshotConfig, DEFAULT_SCREENSHOT_CONFIG } from '../models/screenshot-config';
-import { BrowserType } from 'playwright';
 
+/**
+ * ScreenshotService - Responsible for capturing browser screenshots
+ * Follows Single Responsibility Principle: Only handles screenshot capture logic
+ */
 export class ScreenshotService {
   private config: TestConfig;
 
   constructor(config: TestConfig) {
     this.config = config;
+  }
+
+  /**
+   * Converts a browser name string to a typed browser identifier
+   * This maintains type safety while working with string browser names from config
+   */
+  private getBrowserIdentifier(browserName: string): string {
+    // Validate browser name
+    const validBrowsers = ['chromium', 'firefox', 'webkit'];
+    if (!validBrowsers.includes(browserName.toLowerCase())) {
+      throw new Error(`Invalid browser name: ${browserName}. Valid options are: ${validBrowsers.join(', ')}`);
+    }
+    return browserName.toLowerCase();
   }
 
   public async captureScreenshot(
@@ -20,7 +36,8 @@ export class ScreenshotService {
     outputDir: string
   ): Promise<BrowserResult> {
     const screenshotConfig = this.config.screenshot || DEFAULT_SCREENSHOT_CONFIG;
-    const result = await this.captureScreenshotEnhanced(page, browserName as unknown as BrowserType, outputDir, screenshotConfig);
+    const browserIdentifier = this.getBrowserIdentifier(browserName);
+    const result = await this.captureScreenshotEnhanced(page, browserIdentifier, outputDir, screenshotConfig);
 
     // Convert to legacy BrowserResult format
     const metadata: BrowserMetadata = {
@@ -49,7 +66,7 @@ export class ScreenshotService {
   // NEW: Enhanced screenshot capture with full page support
   public async captureScreenshotEnhanced(
     page: Page,
-    browser: BrowserType,
+    browserIdentifier: string,
     outputDir: string,
     screenshotConfig: ScreenshotConfig = DEFAULT_SCREENSHOT_CONFIG
   ): Promise<ScreenshotResult> {
@@ -58,6 +75,9 @@ export class ScreenshotService {
     try {
       // Ensure output directory exists
       await fs.promises.mkdir(outputDir, { recursive: true });
+
+      // Wait for page to be fully ready before capturing
+      await this.waitForPageReady(page, screenshotConfig);
 
       // Get page height for full page screenshots
       const pageHeight = screenshotConfig.fullPage
@@ -70,7 +90,7 @@ export class ScreenshotService {
 
       // Generate screenshot filename
       const timestamp = Date.now();
-      const filename = `${browser}-${timestamp}.png`;
+      const filename = `${browserIdentifier}-${timestamp}.png`;
       const screenshotPath = path.join(outputDir, filename);
 
       // Capture screenshot with enhanced options
@@ -93,7 +113,7 @@ export class ScreenshotService {
       const captureTime = Date.now() - startTime;
 
       return createScreenshotResult(
-        browser,
+        browserIdentifier,
         screenshotPath,
         width,
         height,
@@ -111,7 +131,7 @@ export class ScreenshotService {
 
       // Return error result
       return createScreenshotResult(
-        browser,
+        browserIdentifier,
         '',
         0,
         0,
@@ -130,31 +150,53 @@ export class ScreenshotService {
     });
   }
 
-  public async cleanupOldScreenshots(
-    directory: string,
-    maxAgeMs: number = 7 * 24 * 60 * 60 * 1000
-  ): Promise<number> {
+    /**
+   * Waits for the page to be fully ready before capturing screenshot.
+   * Includes waiting for images, fonts, and applying delay as configured.
+   * 
+   * @param page - Playwright page instance
+   * @param config - Screenshot configuration with wait options
+   * @private
+   */
+  private async waitForPageReady(page: Page, config: ScreenshotConfig): Promise<void> {
     try {
-      const files = await fs.promises.readdir(directory);
-      const now = Date.now();
-      let deletedCount = 0;
-
-      for (const file of files) {
-        if (!file.endsWith('.png')) continue;
-
-        const filePath = path.join(directory, file);
-        const stats = await fs.promises.stat(filePath);
-
-        if (now - stats.mtimeMs > maxAgeMs) {
-          await fs.promises.unlink(filePath);
-          deletedCount++;
-        }
+      // Wait for images to load if enabled
+      if (config.waitForImages !== false) {
+        await page.waitForFunction(() => {
+          // This code runs in browser context
+          // @ts-expect-error - document is available in browser context
+          const images = Array.from(document.images);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          return images.every((img: any) => img.complete);
+        }, { timeout: 10000 }).catch(() => {
+          // Continue if timeout - some images may not load
+        });
       }
 
-      return deletedCount;
+      // Wait for fonts to load if enabled
+      if (config.waitForFonts !== false) {
+        await page.evaluate(() => {
+          // This code runs in browser context
+          // @ts-expect-error - document is available in browser context
+          return document.fonts ? document.fonts.ready : Promise.resolve();
+        }).catch(() => {
+          // Continue if fonts API not supported
+        });
+      }
+
+      // Apply delay before capture
+      const delay = config.delayBeforeCapture ?? 500;
+      if (delay > 0) {
+        await page.waitForTimeout(delay);
+      }
+
+      // Ensure network is idle
+      await page.waitForLoadState('networkidle').catch(() => {
+        // Continue if networkidle not reached
+      });
     } catch (error) {
-      console.error('Error cleaning up screenshots:', error);
-      return 0;
+      // Log but don't fail - screenshot should still be attempted
+      console.warn('Warning during page readiness check:', error);
     }
   }
 }
